@@ -9,7 +9,7 @@ if __name__ == '__main__':
     	
         botId = int(input("Enter The Bot ID:"))
         print("disabling Torque on the Servo Id [%d]",botId)
-        # servo.disable(botId)
+        servo.disable(botId)
         
         try:
             while True:

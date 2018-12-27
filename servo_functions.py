@@ -31,6 +31,7 @@ ADDR_MX_GOAL_ACCE           = 73
 ADDR_MX_TORQUE_CTRL         = 70
 ADDR_MX_GOAL_TORQUE         = 71
 ADDR_MX_PRESENT_LOAD        = 40
+ADDR_MX_ID                  = 3
 
 ADDR_MX_TORQUE = 14
 
@@ -206,7 +207,6 @@ def read_load(ID,prnt_enable):
     return dxl_present_load
 
 
-
 def disable_bot(ID):
     # Disable Dynamixel Torque
     dynamixel.write1ByteTxRx(port_num, PROTOCOL_VERSION, ID, ADDR_MX_TORQUE_ENABLE, TORQUE_DISABLE)
@@ -239,15 +239,10 @@ if __name__ == '__main__':
             print("[-] Failed to change the baudrate!")
         quit()
     try:
-        botid = int(input("Enter Bot Id: "))
-        disable_bot(botid)
-        while True:
-            read_pos(botid,1)
-
-
+        pass
 
     except KeyboardInterrupt:
         if constants.ENABLE_DXL_MESSAGES: 
             print("\n[] Disabling")
         # Close port
-        dynamixel.closePort(port_num)
+    dynamixel.closePort(port_num)
