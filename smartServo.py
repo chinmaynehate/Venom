@@ -17,33 +17,47 @@ def writeRawAngle(ID,Angle): #( _ , 0-1023)
     return servos.write_pos(ID,Angle) 
 
 def writeAngle(Angle,Servo_Index):
-    servoId = k.servoId[Servo_Index]
-    RawAngle = toRawAngle(Angle,servoId)
-    writeRawAngle(servoId,RawAngle)
+    # servoId = k.servoId[Servo_Index]
+    # RawAngle = toRawAngle(Angle,servoId)
+    # writeRawAngle(servoId,RawAngle)
+    pass
 
 
 def readRawAngle(ID):
     return servos.read_pos(ID,0)
 
-def toStandardAngle(angle,ServoIndex):
-    return (angle - k.dirVector[ServoIndex]*k.FixedPoints[ServoIndex]) * k.SERVO_RES
 
-def toRawAngle(angle,ServoIndex):
-    return (angle) * 1/k.SERVO_RES + k.dirVector[ServoIndex]*k.FixedPoints[ServoIndex]
+def toStandardAngle(angle,dirVector,fixedPoint):
+    return dirVector*(angle - fixedPoint) * k.SERVO_RES
+
+def toRawAngle(angle,dirVector,fixedPoint):
+    return (angle) * 1/k.SERVO_RES * 1/dirVector + fixedPoint
 
 
 # Servo Object 
 class SmartServo:
 
-    def __init__(self,ID=None):
+    def __init__(self,ID=None,dirVector=None,fixedPoint=None,enableTorque=True):
         if ID!=None:
             self.setID(ID)
-        self.Speed = 200
+        if dirVector!=None:
+            self.dirVector = dirVector
+        if fixedPoint!=None:
+            self.fixedPoint=fixedPoint
+        self.Speed = 100
         self.setSpeed(self.Speed)
+
+        if not enableTorque:
+            self.disable()
+        
 
     
     def setID(self,ID):
         self.ID = ID
+
+    def setParams(self,dirVector,fixedPoint):
+        self.dirVector=dirVector
+        self.fixedPoint=fixedPoint
     
     def enable(self):
         return enable(self.ID)
@@ -59,18 +73,18 @@ class SmartServo:
         return writeRawAngle(self.ID,Angle)
 
     def writeAngle(self,Angle):
-        # RawAngle = toRawAngle(Angle,servoId)
-        # return writeRawAngle(servoId,RawAngle)
-        pass
-
+        RawAngle = toRawAngle(Angle,self.dirVector,self.fixedPoint)
+        print("Writing Raw Angle:",RawAngle)
+        return writeRawAngle(self.ID,int(RawAngle))
 
     def readRawAngle(self):
         return readRawAngle(self.ID)
 
+    def readStandardAngle(self):
+        RawAngle = readRawAngle(self.ID)
+        # return RawAngle
+        return int(toStandardAngle(RawAngle,self.dirVector,self.fixedPoint))
+
 
 if __name__=="__main__":
     pass
-
-
-
-

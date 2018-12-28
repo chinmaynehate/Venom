@@ -1,17 +1,21 @@
 import smartServo as servo
 import kinematics as ik
 import constants as k
-from constants import A,B,C,D
+from constants import TOP,MIDDLE,BOTTOM
 import time 
+
+# Leg Constants
+A=0
+B=1
+C=2
+D=3
+
 
 class Venom:
     def __init__(self,servoIndexes=None,totalShiftSize = None,shiftStepSize = None,shiftAllDelay=None):
         self.Legs = [Leg(),Leg(),Leg(),Leg()]
         if servoIndexes!=None:
-            self.setID(A,servoIndexes[0],servoIndexes[1],servoIndexes[2])
-            self.setID(B,servoIndexes[3],servoIndexes[4],servoIndexes[5])
-            self.setID(C,servoIndexes[6],servoIndexes[7],servoIndexes[8])
-            self.setID(D,servoIndexes[9],servoIndexes[10],servoIndexes[11])
+            self.setID(servoIndexes)
 
         if totalShiftSize==None:
             self.totalShiftSize = 0
@@ -34,8 +38,14 @@ class Venom:
         self.currentYd = 0
 
 
-    def setID(self,Leg,ID1,ID2,ID3):
-        self.Legs[Leg].setIDs(ID1,ID2,ID3)
+    def setID(self,ID):
+        for i in range(0,3):
+                self.Legs[i].setIDs(ID[i:i+2])
+
+    def setParams(self,dirParams,fixedPtsParams):
+        for i in range(0,3):
+                self.Legs[i].setParams(dirParams[i:i+2],fixedPtsParams[i:i+2])
+
 
     def stanceBackward(self,increments):
         currentShift = 0
@@ -83,37 +93,30 @@ class Venom:
 
         # Step 3 - Step Leg C Forward
         self.Legs[C].StepInY(0,0)
-
-
-
-
-
-
-        
-
-
-
-
-
     
 
 class Leg:
-    def __init__(self,ID1=None,ID2=None,ID3=None):
-        self.servoTop    = servo.SmartServo()
-        self.servoMiddle = servo.SmartServo()
-        self.servoBottom = servo.SmartServo()
+    def __init__(self,ID = None):
+        self.joints = [servo.SmartServo(),servo.SmartServo(),servo.SmartServo()]
 
-        if (ID1 != None and ID2 != None and ID3 != None):
-            self.setIDs(ID1,ID2,ID3)
+        if (ID != None):
+            self.setIDs(ID)
     
         self.Z_STEP_UP_HEIGHT = 0
         self.STEP_UP_DELAY = 0
 
 
-    def setIDs(self,ID1,ID2,ID3):
-        self.servoTop.setID(ID1)
-        self.servoMiddle.setID(ID2)
-        self.servoBottom.setID(ID3)
+    def setIDs(self,ID):
+        self.joints[TOP].setID(ID[TOP])
+        self.joints[MIDDLE].setID(ID[MIDDLE])
+        self.joints[BOTTOM].setID(ID[BOTTOM])
+    
+    def setParams(self,dirParams,fixedPointParams):
+        self.joints[TOP].setParams(dirParams[TOP],fixedPointParams[TOP])
+        self.joints[MIDDLE].setParams(dirParams[MIDDLE],fixedPointParams[MIDDLE])
+        self.joints[BOTTOM].setParams(dirParams[BOTTOM],fixedPointParams[BOTTOM])
+        
+        
 
     def setLegPos(self,x,y,z):
         t1,t2,t3,isPossible = ik.getInverse(x,y,z)
@@ -124,9 +127,10 @@ class Leg:
             self.y = y
             self.z = z
 
-            self.servoTop.writeAngle(t1)
-            self.servoMiddle.writeAngle(t2)
-            self.servoBottom.writeAngle(t3)
+            self.joints[TOP].writeAngle(t1)
+            self.joints[MIDDLE].writeAngle(t2)
+            self.joints[BOTTOM].writeAngle(t3)
+            
         else:
             print("Inverse Not Possible")
         

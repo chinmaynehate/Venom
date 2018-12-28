@@ -4,7 +4,7 @@ import math
 
 def getInverse(x,y,z):
     l1 = k.linkLength[0]
-    l01 = k.linkLength[1]
+    l01= k.linkLength[1]
     l2 = k.linkLength[2]
     l3 = k.linkLength[3]
 
@@ -17,15 +17,15 @@ def getInverse(x,y,z):
     #print(2**2)
 
     # try:
-    th1 = np.arctan2(y,x)
+    th1 = math.atan2(y,x)
 
     A = -z
     B = r1 -(x*np.cos(th1) + y*np.sin(th1))
     D = (2*r1*(x*np.cos(th1) + y*np.sin(th1)) + (r3**2) - (r2**2) - (r1**2) -(z**2) - ((x*np.cos(th1)+y*np.sin(th1))**2) )/(2*r2)
 
-    phi = np.arctan2(B,A)
+    phi = math.atan2(B,A)
 
-    print(A,B,D)
+    # print(A,B,D)
 
     th02 = -phi + math.atan2(D , + math.pow(((A**2)+(B**2) - (D**2)),0.5)  )
     th12 = -phi + math.atan2(D , - math.pow(((A**2)+(B**2) - (D**2)),0.5)  )
@@ -53,4 +53,4 @@ def getInverse(x,y,z):
 
 
 if __name__ == "__main__":
-    print(getInverse(2,0,1))
+    print(getInverse(2,0,-1))
