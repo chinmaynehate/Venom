@@ -11,88 +11,91 @@ C=2
 D=3
 
 
+
 class Venom:
-    def __init__(self,servoIndexes=None,totalShiftSize = None,shiftStepSize = None,shiftAllDelay=None):
+    def __init__(self,servoIndexes=None):
+        servo.init()                                #Open Port and Set Baud Rate
         self.Legs = [Leg(),Leg(),Leg(),Leg()]
         if servoIndexes!=None:
             self.setID(servoIndexes)
+            
+        self.DEFAULT_X = 5
+        self.DEFAULT_Z = -15
+        self.Y_MAX = 9
+        self.Y_MIN = -0.5
+        self.Y_MEAN = (self.Y_MIN+self.Y_MAX)/2  
 
-        if totalShiftSize==None:
-            self.totalShiftSize = 0
-        else:
-            self.totalShiftSize = totalShiftSize
+        self.totalShiftSize = (self.Y_MAX-self.Y_MEAN)
+        self.stanceIncrements = 0.5
 
-        if shiftStepSize==None:
-            self.shiftStepSize = 0
-        else:
-            self.shiftStepSize = shiftStepSize
-
-        if shiftAllDelay==None:
-            self.shiftAllDelay = 0
-        else:
-            self.shiftAllDelay = shiftAllDelay
-
-        self.currentYa = 0
-        self.currentYb = 0
-        self.currentYc = 0
-        self.currentYd = 0
+        # Delays
+        self.shiftAllInterDelay = 0.1
 
 
     def setID(self,ID):
-        for i in range(0,3):
-                self.Legs[i].setIDs(ID[i:i+2])
+        for i in range(0,4):
+                self.Legs[i].setIDs(ID[i*3:i*3+3])
 
     def setParams(self,dirParams,fixedPtsParams):
-        for i in range(0,3):
-                self.Legs[i].setParams(dirParams[i:i+2],fixedPtsParams[i:i+2])
+        for i in range(0,4):
+                self.Legs[i].setParams(dirParams[i*3:i*3+3],fixedPtsParams[i*3:i*3+3])
 
-
-    def stanceBackward(self,increments):
+    def stanceBackward(self,increments,totalShift):
         currentShift = 0
-        # Temp Vars
-        x=0
-        y=0
-        z=0
 
         while currentShift < self.totalShiftSize:
             currentShift += increments
-            self.Legs[A].setLegPos(x,self.currentYa - currentShift ,z)
-            self.Legs[B].setLegPos(x,self.currentYb - currentShift ,z)
-            self.Legs[C].setLegPos(x,self.currentYc - currentShift ,z)
-            self.Legs[D].setLegPos(x,self.currentYd - currentShift ,z)
-            time.sleep(self.shiftAllDelay)
+            self.Legs[A].setLegPos(self.DEFAULT_X ,self.currentYa - currentShift ,self.DEFAULT_Z)
+            self.Legs[B].setLegPos(self.DEFAULT_X ,self.currentYb - currentShift ,self.DEFAULT_Z)
+            self.Legs[C].setLegPos(self.DEFAULT_X ,self.currentYc - currentShift ,self.DEFAULT_Z)
+            self.Legs[D].setLegPos(self.DEFAULT_X ,self.currentYd - currentShift ,self.DEFAULT_Z)
+            time.sleep(self.shiftAllInterDelay)
 
-        self.currentYa = self.currentYa - currentShift + increments
-        self.currentYb = self.currentYb - currentShift + increments
-        self.currentYc = self.currentYc - currentShift + increments
-        self.currentYd = self.currentYd - currentShift + increments
+        self.currentYa = self.currentYa - currentShift + increments * 0
+        self.currentYb = self.currentYb - currentShift + increments * 0
+        self.currentYc = self.currentYc - currentShift + increments * 0
+        self.currentYd = self.currentYd - currentShift + increments * 0
 
-    def go2StartPos(self):
+    def go2MotionStartPos(self):
         print("Going to Starting Position")
-        # self.Legs[0].setLegPos(x,y,z)
-        # self.Legs[1].setLegPos(x,y,z)
-        # self.Legs[2].setLegPos(x,y,z)
-        # self.Legs[3].setLegPos(x,y,z)
+        self.Legs[A].setLegPos(self.DEFAULT_X, self.Y_MEAN,self.DEFAULT_Z)
+        self.Legs[B].setLegPos(self.DEFAULT_X, self.Y_MIN,self.DEFAULT_Z)
+        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.DEFAULT_Z)
+        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MEAN,self.DEFAULT_Z)
+
+        self.currentYa =  self.Y_MEAN
+        self.currentYb =  self.Y_MIN
+        self.currentYc = -self.Y_MIN
+        self.currentYd = -self.Y_MEAN
 
     def Creep(self):
 
         # Step 1 - Step Leg B Forward
-        self.Legs[B].StepInY(0,0)
+        self.Legs[B].StepInY(self.Y_MIN,self.Y_MAX)
 
+        input("Press Any Key to Push")
         # Step 1.2 - Push Forward
-        self.stanceBackward(0)
+        self.stanceBackward(self.stanceIncrements,self.totalShiftSize)
+
 
         # Step 2 - Step Leg D Forward
-        self.Legs[D].StepInY(0,0)
+        self.Legs[D].StepInY(-self.Y_MAX,-self.Y_MIN)
 
         # Step 2.1 - Step Leg A Forward
-        self.Legs[A].StepInY(0,0)
+        self.Legs[A].StepInY(self.Y_MIN,self.Y_MAX)
 
+        input("Press Any Key to Push")
         # Step 2.2 - Push Forward
-        self.stanceBackward(0)
+        self.stanceBackward(self.stanceIncrements,self.totalShiftSize)
 
         # Step 3 - Step Leg C Forward
-        self.Legs[C].StepInY(0,0)
+        self.Legs[C].StepInY(-self.Y_MAX,-self.Y_MIN)
+
+
+    def walk(self):
+        self.go2MotionStartPos()
+        while True:
+            self.Creep()
     
 
 class Leg:
@@ -102,19 +105,23 @@ class Leg:
         if (ID != None):
             self.setIDs(ID)
     
-        self.Z_STEP_UP_HEIGHT = 0
-        self.STEP_UP_DELAY = 0
+        self.Z_STEP_UP_HEIGHT = -10
+        self.STEP_UP_DELAY = 1
+        self.x = 5
 
 
     def setIDs(self,ID):
         self.joints[TOP].setID(ID[TOP])
         self.joints[MIDDLE].setID(ID[MIDDLE])
         self.joints[BOTTOM].setID(ID[BOTTOM])
+
     
     def setParams(self,dirParams,fixedPointParams):
         self.joints[TOP].setParams(dirParams[TOP],fixedPointParams[TOP])
         self.joints[MIDDLE].setParams(dirParams[MIDDLE],fixedPointParams[MIDDLE])
         self.joints[BOTTOM].setParams(dirParams[BOTTOM],fixedPointParams[BOTTOM])
+
+        self.joints[BOTTOM].setSpeed(400)
         
         
 
@@ -136,17 +143,27 @@ class Leg:
         
 
     def StepInY(self,from_y,to_y):
+        input("Press Any Key")
         # Pickup the Leg
-        self.setLegPos(self.x,from_y,self.Z_STEP_UP_HEIGHT)
+        self.setLegPos(5,from_y,self.Z_STEP_UP_HEIGHT)
+        # self.setLegPos(self.x,from_y,-4.5)
         time.sleep(self.STEP_UP_DELAY)
+        input("Press Any Key")
         # Rotate Top
-        self.setLegPos(self.x,to_y,self.Z_STEP_UP_HEIGHT)
+        self.setLegPos(5,to_y,self.Z_STEP_UP_HEIGHT)
+        # self.setLegPos(self.x,to_y,-4.5)
         self.y = to_y 
         time.sleep(self.STEP_UP_DELAY)
+        input("Press Any Key")
         # Drop Down the Leg
-        self.setLegPos(self.x,to_y,self.z)
-        time.sleep(self.STEP_UP_DELAY)
+        self.setLegPos(5,to_y,-15)
+        # self.setLegPos(self.x,to_y,-11.5)
+        # time.sleep(self.STEP_UP_DELAY)
 
 
 
 
+if __name__=="__main__":
+    venom = Venom(k.servoId)
+    venom.setParams(k.dirVector,k.FixedPoints)
+    venom.walk()
