@@ -89,5 +89,8 @@ class SmartServo:
         return int(toStandardAngle(RawAngle,self.dirVector,self.fixedPoint))
 
 
+    def testfunc(self):
+        return 1+1
+
 if __name__=="__main__":
     pass
