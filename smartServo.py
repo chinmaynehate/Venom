@@ -38,7 +38,7 @@ def toRawAngle(angle,dirVector,fixedPoint):
 class SmartServo:
 
     def __init__(self,ID=None,dirVector=None,fixedPoint=None,enableTorque=True):
-        self.Speed = 100
+        self.Speed = 200
         if ID!=None:
             self.setID(ID)
         if dirVector!=None:
@@ -77,8 +77,13 @@ class SmartServo:
         return writeRawAngle(self.ID,Angle)
 
     def writeAngle(self,Angle):
-        RawAngle = toRawAngle(Angle,self.dirVector,self.fixedPoint)
-        return writeRawAngle(self.ID,int(RawAngle))
+        RawAngle = int(round(toRawAngle(Angle,self.dirVector,self.fixedPoint)))
+        print("Writing Raw :",RawAngle)
+        if RawAngle>1023:
+            RawAngle=1023
+        elif RawAngle<0:
+            RawAngle=0
+        return writeRawAngle(self.ID,RawAngle)
 
     def readRawAngle(self):
         return readRawAngle(self.ID)
@@ -88,9 +93,6 @@ class SmartServo:
         # return RawAngle
         return int(toStandardAngle(RawAngle,self.dirVector,self.fixedPoint))
 
-
-    def testfunc(self):
-        return 1+1
 
 if __name__=="__main__":
     pass

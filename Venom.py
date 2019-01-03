@@ -21,15 +21,15 @@ class Venom:
             
         self.DEFAULT_X = 5
         self.DEFAULT_Z = -15
-        self.Y_MAX = 9
-        self.Y_MIN = -0.5
+        self.Y_MAX = 8
+        self.Y_MIN = -1
         self.Y_MEAN = (self.Y_MIN+self.Y_MAX)/2  
 
-        self.totalShiftSize = (self.Y_MAX-self.Y_MEAN)
-        self.stanceIncrements = 0.5
+        self.totalShiftSize = (self.Y_MAX-self.Y_MIN)/2
+        self.stanceIncrements = 2.5
 
         # Delays
-        self.shiftAllInterDelay = 0.1
+        self.shiftAllInterDelay = 0.01
 
 
     def setID(self,ID):
@@ -44,17 +44,17 @@ class Venom:
         currentShift = 0
 
         while currentShift < self.totalShiftSize:
-            currentShift += increments
+            currentShift += self.stanceIncrements
             self.Legs[A].setLegPos(self.DEFAULT_X ,self.currentYa - currentShift ,self.DEFAULT_Z)
             self.Legs[B].setLegPos(self.DEFAULT_X ,self.currentYb - currentShift ,self.DEFAULT_Z)
             self.Legs[C].setLegPos(self.DEFAULT_X ,self.currentYc - currentShift ,self.DEFAULT_Z)
             self.Legs[D].setLegPos(self.DEFAULT_X ,self.currentYd - currentShift ,self.DEFAULT_Z)
             time.sleep(self.shiftAllInterDelay)
 
-        self.currentYa = self.currentYa - currentShift + increments * 0
-        self.currentYb = self.currentYb - currentShift + increments * 0
-        self.currentYc = self.currentYc - currentShift + increments * 0
-        self.currentYd = self.currentYd - currentShift + increments * 0
+        self.currentYa = self.currentYa - currentShift + increments 
+        self.currentYb = self.currentYb - currentShift + increments 
+        self.currentYc = self.currentYc - currentShift + increments 
+        self.currentYd = self.currentYd - currentShift + increments 
 
     def go2MotionStartPos(self):
         print("Going to Starting Position")
@@ -72,28 +72,33 @@ class Venom:
 
         # Step 1 - Step Leg B Forward
         self.Legs[B].StepInY(self.Y_MIN,self.Y_MAX)
+        self.currentYb = self.Y_MAX
 
-        input("Press Any Key to Push")
+        # input("Press Any Key to PushBack1")
         # Step 1.2 - Push Forward
         self.stanceBackward(self.stanceIncrements,self.totalShiftSize)
 
 
         # Step 2 - Step Leg D Forward
         self.Legs[D].StepInY(-self.Y_MAX,-self.Y_MIN)
+        self.currentYd = -self.Y_MIN
 
         # Step 2.1 - Step Leg A Forward
         self.Legs[A].StepInY(self.Y_MIN,self.Y_MAX)
+        self.currentYa = self.Y_MAX
 
-        input("Press Any Key to Push")
+        # input("Press Any Key to PushBack2")
         # Step 2.2 - Push Forward
         self.stanceBackward(self.stanceIncrements,self.totalShiftSize)
 
         # Step 3 - Step Leg C Forward
         self.Legs[C].StepInY(-self.Y_MAX,-self.Y_MIN)
+        self.currentYc = -self.Y_MIN
 
 
     def walk(self):
         self.go2MotionStartPos()
+        input()
         while True:
             self.Creep()
     
@@ -105,9 +110,8 @@ class Leg:
         if (ID != None):
             self.setIDs(ID)
     
-        self.Z_STEP_UP_HEIGHT = -10
-        self.STEP_UP_DELAY = 1
-        self.x = 5
+        self.Z_STEP_UP_HEIGHT = -9
+        self.STEP_UP_DELAY = 0.2
 
 
     def setIDs(self,ID):
@@ -120,8 +124,7 @@ class Leg:
         self.joints[TOP].setParams(dirParams[TOP],fixedPointParams[TOP])
         self.joints[MIDDLE].setParams(dirParams[MIDDLE],fixedPointParams[MIDDLE])
         self.joints[BOTTOM].setParams(dirParams[BOTTOM],fixedPointParams[BOTTOM])
-
-        self.joints[BOTTOM].setSpeed(400)
+        self.doOnce = True;
         
         
 
@@ -130,9 +133,11 @@ class Leg:
 
         if isPossible:
             # Store the Current Value of X,Y,Z
-            self.x = x
-            self.y = y
-            self.z = z
+            if self.doOnce:
+                self.doOnce=False;
+                self.x = x
+                self.y = y
+                self.z = z
 
             self.joints[TOP].writeAngle(t1)
             self.joints[MIDDLE].writeAngle(t2)
@@ -143,22 +148,21 @@ class Leg:
         
 
     def StepInY(self,from_y,to_y):
-        input("Press Any Key")
+        # input("Press Any Key:Leg Pickup")
         # Pickup the Leg
-        self.setLegPos(5,from_y,self.Z_STEP_UP_HEIGHT)
-        # self.setLegPos(self.x,from_y,-4.5)
+        self.setLegPos(self.x+2,from_y,self.Z_STEP_UP_HEIGHT)
+        
         time.sleep(self.STEP_UP_DELAY)
-        input("Press Any Key")
+        # input("Press Any Key:Leg Rotate")
         # Rotate Top
-        self.setLegPos(5,to_y,self.Z_STEP_UP_HEIGHT)
-        # self.setLegPos(self.x,to_y,-4.5)
+        self.setLegPos(self.x+2,to_y,self.Z_STEP_UP_HEIGHT)
+        
         self.y = to_y 
         time.sleep(self.STEP_UP_DELAY)
-        input("Press Any Key")
+        # input("Press Any Key:Leg Drop")
         # Drop Down the Leg
-        self.setLegPos(5,to_y,-15)
-        # self.setLegPos(self.x,to_y,-11.5)
-        # time.sleep(self.STEP_UP_DELAY)
+        self.setLegPos(self.x,to_y,-15)
+        time.sleep(self.STEP_UP_DELAY)
 
 
 

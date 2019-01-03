@@ -1,6 +1,7 @@
-ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB6"
+ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB1"
 
-DXL_LIB_PATH = "/home/chinmay/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
+# DXL_LIB_PATH = "/home/chinmay/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
+DXL_LIB_PATH = "/home/akhilesh/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
 
 
 ENABLE_DXL_MESSAGES = True
