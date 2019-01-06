@@ -38,7 +38,7 @@ def toRawAngle(angle,dirVector,fixedPoint):
 class SmartServo:
 
     def __init__(self,ID=None,dirVector=None,fixedPoint=None,enableTorque=True):
-        self.Speed = 200
+        self.Speed = 400
         if ID!=None:
             self.setID(ID)
         if dirVector!=None:

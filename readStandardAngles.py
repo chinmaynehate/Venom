@@ -18,8 +18,8 @@ if __name__=="__main__":
                 print(" Leg2:",end="- ")
             if i ==9:
                 print(" Leg3:",end="- ")
-            # print(servoList[i].readStandardAngle(),end=" ,")
-            print(servoList[i].readRawAngle(),end=" ,")
+            print(servoList[i].readStandardAngle(),end=" ,")
+            # print(servoList[i].readRawAngle(),end=" ,")
             
         print()
 

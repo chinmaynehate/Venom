@@ -1,4 +1,4 @@
-ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB1"
+ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB0"
 
 # DXL_LIB_PATH = "/home/chinmay/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
 DXL_LIB_PATH = "/home/akhilesh/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
@@ -10,13 +10,19 @@ ENABLE_DEBUG_MESSAGES = True
 
 
 # Servo Props
-servoId = [9,6,5,16,2,3,12,13,18,14,1,8]
+servoId = [9,18,11,16,2,3,12,13,17,14,8,1]
 SERVO_RES = 0.2932551319648094
 
 #Set-Point of Each Servo
-FixedPoints = [820+153.45,512,194,512-153.45,495,210,512+153.45,512,194,512-153.45,512,194]  
+FixedPoints = [516+153.45,512,515,
+               810-153.45,495,210,
+               512+153.45,512,515,
+               512-153.45,512,819]  
 # Direction of Motion
-dirVector = [-1,1,1,1,1,1,1,-1,1,-1,-1,1]
+dirVector = [-1,1,1,
+              1,1,1,
+              1,-1,-1,
+              -1,-1,-1]
 
 # Venom Props
 
