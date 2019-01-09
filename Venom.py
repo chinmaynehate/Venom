@@ -333,6 +333,163 @@ class Venom:
         # input("Enter to Proceed1")
 
 
+    def TrotStrafeLeft(self):
+        self.X_MAX = 0
+        self.X_MIN = 0
+        self.DEFAULT_Y = 0
+        
+        # Step 1 - Step Leg B And D Left and PushBack Leg A and C Right    
+        # 1.Pickup the Leg
+
+        self.Legs[B].setLegPos(self.X_MAX,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+        self.Legs[D].setLegPos(self.X_MIN,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed1")
+        # 1.Rotate Top
+        self.Legs[B].setLegPos(self.X_MIN,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+        self.Legs[D].setLegPos(self.X_MAX,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+
+        self.Legs[A].setLegPos(self.X_MIN,self.DEFAULT_Y,self.DEFAULT_Z)
+        self.Legs[C].setLegPos(self.X_MAX,self.DEFAULT_Y,self.DEFAULT_Z)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed2")
+        # 1.Drop Down the Leg
+        self.Legs[B].setLegPos(self.X_MIN,self.DEFAULT_Y,self.DEFAULT_Z)
+        self.Legs[D].setLegPos(self.X_MAX,self.DEFAULT_Y,self.DEFAULT_Z)
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed")
+
+        # Step 2 - Step Leg A And C Forward and PushBack Leg B and D Back
+        
+        # 1.Pickup the Leg
+
+        self.Legs[A].setLegPos(self.X_MIN,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+        self.Legs[C].setLegPos(self.X_MAX,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed3")
+        # 1.Rotate Top
+        self.Legs[A].setLegPos(self.X_MAX,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+        self.Legs[C].setLegPos(self.X_MIN,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+
+        self.Legs[B].setLegPos(self.X_MAX,self.DEFAULT_Y,self.DEFAULT_Z)
+        self.Legs[D].setLegPos(self.X_MIN,self.DEFAULT_Y,self.DEFAULT_Z)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed")
+        # 1.Drop Down the Leg
+        self.Legs[A].setLegPos(self.X_MAX,self.DEFAULT_Y,self.DEFAULT_Z)
+        self.Legs[C].setLegPos(self.X_MIN,self.DEFAULT_Y,self.DEFAULT_Z)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed1")
+
+    def TrotStrafeRight(self):
+        self.X_MAX = 0
+        self.X_MIN = 0
+        self.DEFAULT_Y = 0
+        
+        # Step 1 - Step Leg B And D Left and PushBack Leg A and C Right    
+        # 1.Pickup the Leg
+
+        self.Legs[B].setLegPos(self.X_MIN,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+        self.Legs[D].setLegPos(self.X_MAX,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed1")
+        # 1.Rotate Top
+        self.Legs[B].setLegPos(self.X_MAX,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+        self.Legs[D].setLegPos(self.X_MIN,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+
+        self.Legs[A].setLegPos(self.X_MAX,self.DEFAULT_Y,self.DEFAULT_Z)
+        self.Legs[C].setLegPos(self.X_MIN,self.DEFAULT_Y,self.DEFAULT_Z)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed2")
+        # 1.Drop Down the Leg
+        self.Legs[B].setLegPos(self.X_MAX,self.DEFAULT_Y,self.DEFAULT_Z)
+        self.Legs[D].setLegPos(self.X_MIN,self.DEFAULT_Y,self.DEFAULT_Z)
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed")
+
+        # Step 2 - Step Leg A And C Forward and PushBack Leg B and D Back
+        
+        # 1.Pickup the Leg
+
+        self.Legs[A].setLegPos(self.X_MAX,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+        self.Legs[C].setLegPos(self.X_MIN,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed3")
+        # 1.Rotate Top
+        self.Legs[A].setLegPos(self.X_MIN,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+        self.Legs[C].setLegPos(self.X_MAX,self.DEFAULT_Y,self.Z_STEP_UP_HEIGHT)
+
+        self.Legs[B].setLegPos(self.X_MIN,self.DEFAULT_Y,self.DEFAULT_Z)
+        self.Legs[D].setLegPos(self.X_MAX,self.DEFAULT_Y,self.DEFAULT_Z)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed")
+        # 1.Drop Down the Leg
+        self.Legs[A].setLegPos(self.X_MIN,self.DEFAULT_Y,self.DEFAULT_Z)
+        self.Legs[C].setLegPos(self.X_MAX,self.DEFAULT_Y,self.DEFAULT_Z)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed1")
+
+    def TrotReverse(self):
+        # Step 1 - Step Leg B And D Forward and PushBack Leg A and C Back
+        
+        # 1.Pickup the Leg
+
+        self.Legs[B].setLegPos(self.DEFAULT_X,self.Y_MAX,self.Z_STEP_UP_HEIGHT)
+        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.Z_STEP_UP_HEIGHT)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed1")
+        # 1.Rotate Top
+        self.Legs[B].setLegPos(self.DEFAULT_X,self.Y_MIN,self.Z_STEP_UP_HEIGHT)
+        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MAX,self.Z_STEP_UP_HEIGHT)
+
+        self.Legs[A].setLegPos(self.DEFAULT_X,self.Y_MAX,self.DEFAULT_Z)
+        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.DEFAULT_Z)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed2")
+        # 1.Drop Down the Leg
+        self.Legs[B].setLegPos(self.DEFAULT_X,self.Y_MIN,self.DEFAULT_Z)
+        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MAX,self.DEFAULT_Z)
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed")
+
+        # Step 2 - Step Leg A And C Forward and PushBack Leg B and D Back
+        
+        # 1.Pickup the Leg
+
+        self.Legs[A].setLegPos(self.DEFAULT_X,self.Y_MAX,self.Z_STEP_UP_HEIGHT)
+        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.Z_STEP_UP_HEIGHT)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed3")
+        # 1.Rotate Top
+        self.Legs[A].setLegPos(self.DEFAULT_X,self.Y_MIN,self.Z_STEP_UP_HEIGHT)
+        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MAX,self.Z_STEP_UP_HEIGHT)
+
+        self.Legs[B].setLegPos(self.DEFAULT_X,self.Y_MAX,self.DEFAULT_Z)
+        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.DEFAULT_Z)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed")
+        # 1.Drop Down the Leg
+        self.Legs[A].setLegPos(self.DEFAULT_X,self.Y_MIN,self.DEFAULT_Z)
+        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MAX,self.DEFAULT_Z)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed1")
+
+
     def TrotClimb(self):
         pass                #TODO
 
