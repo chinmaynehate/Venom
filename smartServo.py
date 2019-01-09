@@ -22,6 +22,9 @@ def writeAngle(Angle,Servo_Index):
     # writeRawAngle(servoId,RawAngle)
     pass
 
+def readTorque(ID):
+    return servos.read_torque(ID)
+
 
 def readRawAngle(ID):
     return servos.read_pos(ID,0)
@@ -38,7 +41,7 @@ def toRawAngle(angle,dirVector,fixedPoint):
 class SmartServo:
 
     def __init__(self,ID=None,dirVector=None,fixedPoint=None,enableTorque=True):
-        self.Speed = 400
+        self.Speed = 1000
         if ID!=None:
             self.setID(ID)
         if dirVector!=None:

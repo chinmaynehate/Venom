@@ -66,6 +66,8 @@ dxl_present_position = 0                                    # Present position
 dxl_present_speed    = 0
 dxl_present_load     = 0
 
+
+
 def enable_port():
     port_num = dynamixel.portHandler(DEVICENAME)
 
@@ -207,6 +209,9 @@ def read_load(ID,prnt_enable):
     return dxl_present_load
 
 
+
+
+
 def disable_bot(ID):
     # Disable Dynamixel Torque
     dynamixel.write1ByteTxRx(port_num, PROTOCOL_VERSION, ID, ADDR_MX_TORQUE_ENABLE, TORQUE_DISABLE)
@@ -217,7 +222,6 @@ def disable_bot(ID):
     elif dxl_error != 0:
         if constants.ENABLE_DXL_MESSAGES: print(dynamixel.getRxPacketError(PROTOCOL_VERSION, dxl_error))
 '''
-
 
 
 if __name__ == '__main__':

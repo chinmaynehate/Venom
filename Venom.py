@@ -19,19 +19,19 @@ class Venom:
         if servoIndexes!=None:
             self.setID(servoIndexes)
             
-        self.DEFAULT_X = 5
-        self.DEFAULT_Z = -15
-        self.Y_MAX = 4
+        self.DEFAULT_X =5
+        self.DEFAULT_Z = -17
+        self.Y_MAX = 7
         self.Y_MIN = -2
         self.Y_MEAN = (self.Y_MIN+self.Y_MAX)/2  
-        self.Z_STEP_UP_HEIGHT = -13
+        self.Z_STEP_UP_HEIGHT = -11
 
         self.totalShiftSize = (self.Y_MAX-self.Y_MIN)/2
         self.stanceIncrements = 2.5
 
         # Delays
         self.shiftAllInterDelay = 0.01
-        self.trotDelay = 0.08
+        self.trotDelay = 0.09
 
     def setID(self,ID):
         for i in range(0,4):
@@ -73,8 +73,13 @@ class Venom:
         # self.currentYc = self.currentYc - totalShift
         # self.currentYd = self.currentYd - 2 
 
-        self.Legs[A].setLegPos(self.DEFAULT_X ,self.currentYa ,self.DEFAULT_Z)
-        self.Legs[B].setLegPos(self.DEFAULT_X ,self.currentYb  ,self.DEFAULT_Z)
+        # self.Legs[A].setLegPos(self.DEFAULT_X ,self.currentYa ,self.DEFAULT_Z)
+        # self.Legs[B].setLegPos(self.DEFAULT_X ,self.currentYb  ,self.DEFAULT_Z)
+        # self.Legs[C].setLegPos(self.DEFAULT_X ,self.currentYc ,self.DEFAULT_Z)
+        # self.Legs[D].setLegPos(self.DEFAULT_X ,self.currentYd  ,self.DEFAULT_Z)
+
+        self.Legs[A].setLegPos(self.Legs[A].x ,self.currentYa ,self.Legs[A].z)
+        self.Legs[B].setLegPos(self.Legs[B].x ,self.currentYb  ,self.Legs[B].z)
         self.Legs[C].setLegPos(self.DEFAULT_X ,self.currentYc ,self.DEFAULT_Z)
         self.Legs[D].setLegPos(self.DEFAULT_X ,self.currentYd  ,self.DEFAULT_Z)
         time.sleep(0.1)
@@ -146,9 +151,47 @@ class Venom:
         self.currentYc = -self.Y_MIN
 
 
+    def Creep_sandDune(self):
+
+        input()
+        # Step 1 - Step Leg B Forward
+        self.Legs[B].z=self.DEFAULT_Z + 7
+        self.Legs[B].Z_STEP_UP_HEIGHT=self.Z_STEP_UP_HEIGHT + 7
+        self.Legs[B].x = self.DEFAULT_X + 1.5
+        self.Legs[B].StepInY(self.Y_MIN,self.Y_MAX)
+        self.currentYb = self.Y_MAX
+
+        # input("Press Any Key to PushBack1")
+        # Step 1.2 - Push Forward
+        self.stanceBackward(self.stanceIncrements,self.totalShiftSize)
+
+
+        # Step 2 - Step Leg D Forward
+        input()
+        self.Legs[D].StepInY(-self.Y_MAX,-self.Y_MIN)
+        self.currentYd = -self.Y_MIN
+
+        # Step 2.1 - Step Leg A Forward
+        input()
+        self.Legs[A].z=self.DEFAULT_Z + 7
+        self.Legs[A].Z_STEP_UP_HEIGHT=self.Z_STEP_UP_HEIGHT + 7
+        self.Legs[A].x = self.DEFAULT_X + 1.5
+        self.Legs[A].StepInY(self.Y_MIN,self.Y_MAX)
+        self.currentYa = self.Y_MAX
+
+        # input("Press Any Key to PushBack2")
+        # Step 2.2 - Push Forward
+        self.stanceBackward(self.stanceIncrements,self.totalShiftSize)
+
+        # Step 3 - Step Leg C Forward
+        input()
+        self.Legs[C].StepInY(-self.Y_MAX,-self.Y_MIN)
+        self.currentYc = -self.Y_MIN
+
     def Creep(self):
 
         # Step 1 - Step Leg B Forward
+        self.Legs[B].Z_STEP_UP_HEIGHT=self.DEFAULT_Z + 4.5
         self.Legs[B].StepInY(self.Y_MIN,self.Y_MAX)
         self.currentYb = self.Y_MAX
 
@@ -335,7 +378,8 @@ class Venom:
         self.go2MotionStartPos()
         input("Press Enter to Begin Motion")
         while True:
-            self.TrotClimb()
+            self.Creep_sandDune()
+            # input()
 class Leg:
     def __init__(self,ID = None):
         self.joints = [servo.SmartServo(),servo.SmartServo(),servo.SmartServo()]
@@ -344,7 +388,7 @@ class Leg:
             self.setIDs(ID)
     
         self.Z_STEP_UP_HEIGHT = -9
-        self.STEP_UP_DELAY = 0.2
+        self.STEP_UP_DELAY = 0.4
 
 
     def setIDs(self,ID):
@@ -384,11 +428,13 @@ class Leg:
         # input("Press Any Key:Leg Pickup")
         # Pickup the Leg
         self.setLegPos(self.x,from_y,self.Z_STEP_UP_HEIGHT)
+        # self.joints[BOTTOM].writeAngle(20);
         
         time.sleep(self.STEP_UP_DELAY)
         # input("Press Any Key:Leg Rotate")
         # Rotate Top
         self.setLegPos(self.x,to_y,self.Z_STEP_UP_HEIGHT)
+        # self.joints[BOTTOM].writeAngle(20);
         
         self.y = to_y 
         time.sleep(self.STEP_UP_DELAY)
