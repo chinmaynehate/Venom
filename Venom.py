@@ -44,24 +44,14 @@ class Venom:
     def stanceBackward(self,increments,totalShift):
         currentShift = 0
 
-        # while currentShift < self.totalShiftSize:
-        #     currentShift += self.stanceIncrements
-        #     self.Legs[A].setLegPos(self.DEFAULT_X ,self.currentYa - currentShift ,self.DEFAULT_Z)
-        #     self.Legs[B].setLegPos(self.DEFAULT_X ,self.currentYb - currentShift ,self.DEFAULT_Z)
-        #     self.Legs[C].setLegPos(self.DEFAULT_X ,self.currentYc - currentShift ,self.DEFAULT_Z)
-        #     self.Legs[D].setLegPos(self.DEFAULT_X ,self.currentYd - currentShift ,self.DEFAULT_Z)
-        #     time.sleep(self.shiftAllInterDelay)
-
-        # self.currentYa = self.currentYa - currentShift + increments 
-        # self.currentYb = self.currentYb - currentShift + increments 
-        # self.currentYc = self.currentYc - currentShift + increments 
-        # self.currentYd = self.currentYd - currentShift + increments
         
         self.currentYa = self.currentYa - totalShift 
         self.currentYb = self.currentYb - totalShift 
         self.currentYc = self.currentYc - totalShift 
         self.currentYd = self.currentYd - totalShift
 
+
+        # FOR Creep Differential
         # self.currentYa = self.currentYa - totalShift 
         # self.currentYb = self.currentYb - 2
         # self.currentYc = self.currentYc - 2 
@@ -73,15 +63,21 @@ class Venom:
         # self.currentYc = self.currentYc - totalShift
         # self.currentYd = self.currentYd - 2 
 
-        # self.Legs[A].setLegPos(self.DEFAULT_X ,self.currentYa ,self.DEFAULT_Z)
-        # self.Legs[B].setLegPos(self.DEFAULT_X ,self.currentYb  ,self.DEFAULT_Z)
-        # self.Legs[C].setLegPos(self.DEFAULT_X ,self.currentYc ,self.DEFAULT_Z)
-        # self.Legs[D].setLegPos(self.DEFAULT_X ,self.currentYd  ,self.DEFAULT_Z)
 
-        self.Legs[A].setLegPos(self.Legs[A].x ,self.currentYa ,self.Legs[A].z)
-        self.Legs[B].setLegPos(self.Legs[B].x ,self.currentYb  ,self.Legs[B].z)
+        # For Normal Drive
+        self.Legs[A].setLegPos(self.DEFAULT_X ,self.currentYa ,self.DEFAULT_Z)
+        self.Legs[B].setLegPos(self.DEFAULT_X ,self.currentYb  ,self.DEFAULT_Z)
         self.Legs[C].setLegPos(self.DEFAULT_X ,self.currentYc ,self.DEFAULT_Z)
         self.Legs[D].setLegPos(self.DEFAULT_X ,self.currentYd  ,self.DEFAULT_Z)
+
+
+        # For Sand Dune
+        # self.Legs[A].setLegPos(self.Legs[A].x ,self.currentYa ,self.Legs[A].z)
+        # self.Legs[B].setLegPos(self.Legs[B].x ,self.currentYb  ,self.Legs[B].z)
+        # self.Legs[C].setLegPos(self.DEFAULT_X ,self.currentYc ,self.DEFAULT_Z)
+        # self.Legs[D].setLegPos(self.DEFAULT_X ,self.currentYd  ,self.DEFAULT_Z)
+        
+        
         time.sleep(0.1)
 
     def go2MotionStartPos(self):

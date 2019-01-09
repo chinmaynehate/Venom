@@ -1,5 +1,3 @@
-import math
-
 
 def cMap(value,inputLow,inputHigh,outputLow,outputHigh,constrain=False):
     mappedValue = (value - inputLow) * (outputHigh-outputLow)/(inputHigh-inputLow) + outputLow
