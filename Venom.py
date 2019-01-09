@@ -3,7 +3,7 @@ import kinematics as ik
 import constants as k
 from constants import TOP,MIDDLE,BOTTOM
 import time 
-from IP import *
+import IP
 # Leg Constants
 A=0
 B=1
@@ -24,7 +24,7 @@ class Venom:
         self.Y_MAX = 7
         self.Y_MIN = -2
         self.Y_MEAN = (self.Y_MIN+self.Y_MAX)/2  
-        self.Z_STEP_UP_HEIGHT = -11
+        self.Z_STEP_UP_HEIGHT = -15
 
         self.totalShiftSize = (self.Y_MAX-self.Y_MIN)/2
         self.stanceIncrements = 2.5
@@ -213,72 +213,25 @@ class Venom:
 
 
     def Trot_followLine(self):
-        Kp=1
-        error = 0
+        global_angle, average_error,_,_,_,_ = IP.getSlopeError()
+        
+        print ("Errors:",global_angle,average_error)
+        # input()
 
-        left_Ymax = 0 
-        left_Ymin  = 0 
-
-        right_Ymax = 0 
-        right_Ymin  = 0
+        error=global_angle
 
         if error >0:
-            left_Ymax = left_Ymax- Kp*error
+            self.TrotLeft()
         elif error <0:
-            right_Ymax = right_Ymax - Kp*error
+            self.TrotRight()
 
-        # Follow Line
 
-        # Step 1 - Step Leg B And D Forward and PushBack Leg A and C Back
-        
-        # 1.Pickup the Leg
-
-        self.Legs[B].setLegPos(self.DEFAULT_X,right_Ymin,self.Z_STEP_UP_HEIGHT)
-        self.Legs[D].setLegPos(self.DEFAULT_X,-left_Ymax,self.Z_STEP_UP_HEIGHT)
-
-        time.sleep(self.trotDelay)
-        # input("Enter to Proceed1")
-        # 1.Rotate Top
-        self.Legs[B].setLegPos(self.DEFAULT_X,right_Ymax,self.Z_STEP_UP_HEIGHT)
-        self.Legs[D].setLegPos(self.DEFAULT_X,-left_Ymin,self.Z_STEP_UP_HEIGHT)
-
-        self.Legs[A].setLegPos(self.DEFAULT_X,left_Ymin,self.DEFAULT_Z)
-        self.Legs[C].setLegPos(self.DEFAULT_X,-right_Ymax,self.DEFAULT_Z)
-
-        time.sleep(self.trotDelay)
-        # input("Enter to Proceed2")
-        # 1.Drop Down the Leg
-        self.Legs[B].setLegPos(self.DEFAULT_X,right_Ymax,self.DEFAULT_Z)
-        self.Legs[D].setLegPos(self.DEFAULT_X,-left_Ymin,self.DEFAULT_Z)
-        time.sleep(self.trotDelay)
-        # input("Enter to Proceed")
-
-        # Step 2 - Step Leg A And C Forward and PushBack Leg B and D Back
-        
-        # 1.Pickup the Leg
-
-        self.Legs[A].setLegPos(self.DEFAULT_X,left_Ymin,self.Z_STEP_UP_HEIGHT)
-        self.Legs[C].setLegPos(self.DEFAULT_X,-right_Ymax,self.Z_STEP_UP_HEIGHT)
-
-        time.sleep(self.trotDelay)
-        # input("Enter to Proceed3")
-        # 1.Rotate Top
-        self.Legs[A].setLegPos(self.DEFAULT_X,left_Ymax,self.Z_STEP_UP_HEIGHT)
-        self.Legs[C].setLegPos(self.DEFAULT_X,-right_Ymin,self.Z_STEP_UP_HEIGHT)
-
-        self.Legs[B].setLegPos(self.DEFAULT_X,right_Ymin,self.DEFAULT_Z)
-        self.Legs[D].setLegPos(self.DEFAULT_X,-left_Ymax,self.DEFAULT_Z)
-
-        time.sleep(self.trotDelay)
-        # input("Enter to Proceed")
-        # 1.Drop Down the Leg
-        self.Legs[A].setLegPos(self.DEFAULT_X,left_Ymax,self.DEFAULT_Z)
-        self.Legs[C].setLegPos(self.DEFAULT_X,-right_Ymin,self.DEFAULT_Z)
-
-        time.sleep(self.trotDelay)
-        # input("Enter to Proceed1")
 
     def Trot(self):
+        global_angle, average_error,_,_,_,_ = IP.getSlopeError()
+        
+        print (global_angle,average_error)
+        # input()
         # Step 1 - Step Leg B And D Forward and PushBack Leg A and C Back
         
         # 1.Pickup the Leg
@@ -489,9 +442,63 @@ class Venom:
     def TrotClimb(self):
         pass                #TODO
 
+
+    def TrotLeft(self):
+        self.Y_MAX2 = 3
+        self.Y_MIN2 = -1.5
+        # Step 1 - Step Leg B And D Forward and PushBack Leg A and C Back
+        
+        # 1.Pickup the Leg
+
+        self.Legs[B].setLegPos(self.DEFAULT_X,self.Y_MIN,self.Z_STEP_UP_HEIGHT)
+        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MAX2,self.Z_STEP_UP_HEIGHT)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed1")
+        # 1.Rotate Top
+        self.Legs[B].setLegPos(self.DEFAULT_X,self.Y_MAX,self.Z_STEP_UP_HEIGHT)
+        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MIN2,self.Z_STEP_UP_HEIGHT)
+
+        self.Legs[A].setLegPos(self.DEFAULT_X,self.Y_MIN2,self.DEFAULT_Z)
+        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MAX,self.DEFAULT_Z)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed2")
+        # 1.Drop Down the Leg
+        self.Legs[B].setLegPos(self.DEFAULT_X,self.Y_MAX,self.DEFAULT_Z)
+        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MIN2,self.DEFAULT_Z)
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed")
+
+        # Step 2 - Step Leg A And C Forward and PushBack Leg B and D Back
+        
+        # 1.Pickup the Leg
+
+        self.Legs[A].setLegPos(self.DEFAULT_X,self.Y_MIN2,self.Z_STEP_UP_HEIGHT)
+        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MAX,self.Z_STEP_UP_HEIGHT)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed3")
+        # 1.Rotate Top
+        self.Legs[A].setLegPos(self.DEFAULT_X,self.Y_MAX2,self.Z_STEP_UP_HEIGHT)
+        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.Z_STEP_UP_HEIGHT)
+
+        self.Legs[B].setLegPos(self.DEFAULT_X,self.Y_MIN,self.DEFAULT_Z)
+        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MAX2,self.DEFAULT_Z)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed")
+        # 1.Drop Down the Leg
+        self.Legs[A].setLegPos(self.DEFAULT_X,self.Y_MAX2,self.DEFAULT_Z)
+        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.DEFAULT_Z)
+
+        time.sleep(self.trotDelay)
+        # input("Enter to Proceed1")
+
+
     def TrotRight(self):
-        self.Y_MAX2 = 1
-        self.Y_MIN2 = -1
+        self.Y_MAX2 = 3
+        self.Y_MIN2 = -1.5
         # Step 1 - Step Leg B And D Forward and PushBack Leg A and C Back
         
         # 1.Pickup the Leg
@@ -546,7 +553,8 @@ class Venom:
         self.go2MotionStartPos()
         input("Press Enter to Begin Motion")
         while True:
-            self.Trot()
+            
+            self.Trot_followLine()
             # input()
 
 

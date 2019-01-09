@@ -5,7 +5,7 @@ from math import *
 import serial
 import time
 from time import sleep
-
+import constants as k
 from_centre=False
 n_slices=4
 error_array = []
@@ -143,15 +143,15 @@ def constrain(x, lower,upper):
 		x = x
 	return x
  
-def errorAverage(restored_img,error_array,bottomX,bottomY):
+def errorAverage(restored_img,error_array):
 	font= cv.FONT_HERSHEY_SIMPLEX
 	mapped_error=[]
 	error_sum = 0  
 	for i in range(len(error_array)):
-		mapped_error.append(constrain(map(error_array[i],-200,200,0,100),0,100))
+		mapped_error.append(constrain(map(error_array[i],-220,240,0,100),0,100))
 		error_sum += mapped_error[i]
 	error_average = error_sum/n_slices
-	cv.putText(restored_img,str(error_average),(bottomX-150,bottomY-50),font,1,(200,0,200),2)
+	# cv.putText(restored_img,str(error_average),(bottomX-150,bottomY-50),font,1,(200,0,200),2)
 	return error_average
 
 def calculateSlope(centers_list):
@@ -162,11 +162,11 @@ def calculateSlope(centers_list):
 	y1 = centers_list[1]
 	x2 = centers_list[6]
 	y2= centers_list[7]
-	print (x1,x2,y1,y2)
+	#print (x1,x2,y1,y2)
 	if (x2-x1 !=0):
 			diff_y = y2-y1
 			diff_x = x2-x1
-			slope = diff_y/diff_x
+			slope = 1.0*diff_y/diff_x
 			print(slope)
 	elif prev_slope<0 :
 		slope = -5729.57789312
@@ -179,20 +179,38 @@ def calculateSlope(centers_list):
 		elif slope <= -5729.57789312:
 			angle = -89.99
 		else :
-			angle = degrees(atan(slope))    
+			# angle = degrees(atan(slope)) 
+			angle = (np.arctan(slope)*180)/np.pi  
 		checkangle=0
 	prev_slope = slope     			# If line is on right side , x2-x1 is negative. Opposite for other direction.
-	return angle
+	return angle,x1,x2,y1,y2
 
 
 
+# cap = None
+# cap =cv.VideoCapture(k.CAMERA_ID)
+
+# # def init():
+# # 	global cap
+# # 	cap =cv.VideoCapture(k.CAMERA_ID) 
+# def release():
+# 	cap.release()
 
 def getSlopeError():
-	cap =cv.VideoCapture(0)
-	ret,image= cap.read()
+	# global cap
+	cap =cv.VideoCapture(k.CAMERA_ID)
+	for i in range(0,2):
+		ret,image= cap.read()
+	# cv.imshow("ret",image)
+	# key = cv.waitKey(1) & 0xFF
+	# if key == ord('q'):
+	# 	cap.release()
+	# 	cv.destroyAllWindows()
+	# 	quit()
+
 	Images=[]
-	error_array = []
-	empty_array = []
+	global error_array
+	global empty_array 
 	global centers_list
 	font= cv.FONT_HERSHEY_SIMPLEX
 	gray_still= cv.cvtColor(image,cv.COLOR_BGR2GRAY)
@@ -205,11 +223,33 @@ def getSlopeError():
 
 	full_height,full_width = restored_img.shape[:2]
 
-	error_average =errorAverage(restored_img,error_array,full_width,full_height)
-	global_angle = calculateSlope(centers_list)	
-
+	error_average =errorAverage(restored_img,error_array)
+	global_angle,x1,x2,y1,y2 = calculateSlope(centers_list)	
+	error_array=[]			#Reset 
+	empty_array = []
+	centers_list = []
 	cv.putText(restored_img,str(global_angle),(0,full_height-50),font,1,(200,0,200),2)
 	error_average =int(error_average)
-	print (global_angle,error_average)
-	return global_angle,error_average
-getSlopeError()
+	cv.imshow("masked",restored_img)
+	#print (global_angle,error_average)
+	cap.release()
+	return global_angle,error_average,x1,x2,y1,y2
+
+
+if __name__=="__main__":
+	found = False
+	id=1
+	while True:
+		try:
+			cap =cv.VideoCapture(id)
+			if cap.isOpened():
+				found=True
+		except:
+			pass
+
+		if found:
+			print("ID Found:",id)
+			break
+		id+=1
+
+# getSlopeError()

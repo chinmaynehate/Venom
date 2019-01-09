@@ -81,7 +81,7 @@ class SmartServo:
 
     def writeAngle(self,Angle):
         RawAngle = int(round(toRawAngle(Angle,self.dirVector,self.fixedPoint)))
-        print("Writing Raw :",RawAngle)
+        #print("Writing Raw :",RawAngle)
         if RawAngle>1023:
             RawAngle=1023
         elif RawAngle<0:
