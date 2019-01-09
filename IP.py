@@ -5,7 +5,6 @@ from math import *
 import serial
 import time
 from time import sleep
-vid = cv.VideoCapture(1)
 
 from_centre=False
 n_slices=4
@@ -15,7 +14,7 @@ empty_array = []
 prev_slope = 0
 slope = 0
 prev_c = 0
-
+centers_list = []
  
 
 def ifilter(predicate, iterable):
@@ -27,7 +26,7 @@ def ifilter(predicate, iterable):
         	centers_list[i] += part_height*(i-1/2) 
             
 
-def segment_img(feed_image0,img_array,slices,roi_array):
+def segment_img(feed_image0,img_array,slices):
 	global error_array
 	global part_height  
 	global centers_list  									#Declared global for use in ifilter
@@ -41,8 +40,6 @@ def segment_img(feed_image0,img_array,slices,roi_array):
 		part= part_height*i
 		crop_image= feed_image0[part:part+part_height,0:width]
 		img_array.append(crop_image)
-		roi = feed_image0[part:part+50,0:50]
-		roi_array.append(roi)
 	
 		error_array = ContoursAndBoundaries(img_array[i],empty_array)				#COMMENTED
 		# cv.imshow('morph_%d'%i, morph[i])                     #Show each slice
@@ -171,7 +168,6 @@ def calculateSlope(centers_list):
 			diff_x = x2-x1
 			slope = diff_y/diff_x
 			print(slope)
-	# angle = 45
 	elif prev_slope<0 :
 		slope = -5729.57789312
 	elif prev_slope>0 :
@@ -188,71 +184,32 @@ def calculateSlope(centers_list):
 	prev_slope = slope     			# If line is on right side , x2-x1 is negative. Opposite for other direction.
 	return angle
 
-def returnVal(global_angle,error_average):
-	return global_angle,error_average
 
 
 
-while True:
-	ret,image= vid.read()
-	# image= cv.imread("Line2.png")
+def getSlopeError():
+	cap =cv.VideoCapture(0)
+	ret,image= cap.read()
 	Images=[]
-	ROI_Array = []
 	error_array = []
 	empty_array = []
-	centers_list = []
+	global centers_list
 	font= cv.FONT_HERSHEY_SIMPLEX
-	# ok,frame= vid.read()
-	hsv_image = cv.cvtColor(image, cv.COLOR_BGR2HSV)
-
-	# hsv= cv.cvtColor(frame,cv.COLOR_BGR2HSV)
-	# gray= cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
-	gray_still= cv.cvtColor(image,cv.COLOR_BGR2GRAY)	 #COMMENTED
-	# g_blur=cv.GaussianBlur(hsv,(5,5),0)
-	# bilateral_filter= cv.bilateralFilter(hsv,3,60,60)
+	gray_still= cv.cvtColor(image,cv.COLOR_BGR2GRAY)
 	bilateral_filter_gray=cv.bilateralFilter(gray_still,3,60,60)
-
-	#bilateral=cv.bilateralFilter(hsv_image,3,60,60)			#COMMENTED
-
 	ret,thresh=cv.threshold(bilateral_filter_gray,150,255,cv.THRESH_BINARY)
+	dilate_still=cv.dilate(thresh,np.ones((5,5),np.uint8),9)
 
-	#ret,thresh=cv.threshold(bilateral_filter_gray_still,60,255,cv.THRESH_BINARY_INV)	  #COMMENTED
-
-	dilate_still=cv.dilate(thresh,np.ones((5,5),np.uint8),9)	 #COMMENTED
-
-
-
-
-	# dilate = cv.dilate(thresh,np.ones((5,5),np.uint8),9)
-	# erode = cv.erode(bilateral_filter,np.ones((1,1),np.uint8),1)
-	# mask_blur=cv.inRange(g_blur,lower_range,upper_range)
-	# #mask_dilate= cv.inRange(dilate,lower_range,upper_range)
-	# mask_erode = cv.inRange(erode,lower_range,upper_range)
-
-	# mask_bilateral=cv.inRange(bilateral_filter,lower_range,upper_range)
-	# cv.imshow('frame',frame)
-	# cv.imshow('mask_blur',mask_blur)
-	# cv.imshow('bilateral_filter',mask_bilateral)
-	# cv.imshow('dilate',dilate)
-	# cv.imshow('mask_erode',mask_erode)
-	# cv.imshow('thresh',thresh)
-	cv.imshow('original',image)
-
-	# closed= segment_img(hsv_image,Images,n_slices, ROI_Array)              # Slice function called, with arguments either feeded through an image or through continuous loop,
-	closed= segment_img(dilate_still,Images,n_slices, ROI_Array)  
+	closed= segment_img(dilate_still,Images,n_slices)  
 	restored_img= restore_img(closed)
+
 	full_height,full_width = restored_img.shape[:2]
+
 	error_average =errorAverage(restored_img,error_array,full_width,full_height)
 	global_angle = calculateSlope(centers_list)	
+
 	cv.putText(restored_img,str(global_angle),(0,full_height-50),font,1,(200,0,200),2)
 	error_average =int(error_average)
-
-	returnVal(global_angle,error_average)
-
-	cv.imshow('restored', restored_img)
-
-	if cv.waitKey(1) & 0xFF == ord('q'):
-		break
-
-# print([lower_range[0], lower_range[1], lower_range[2]])
-# print([upper_range[0], upper_range[1], upper_range[2]])
+	print (global_angle,error_average)
+	return global_angle,error_average
+getSlopeError()
