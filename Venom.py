@@ -3,7 +3,7 @@ import kinematics as ik
 import constants as k
 from constants import TOP,MIDDLE,BOTTOM
 import time 
-
+from IP import *
 # Leg Constants
 A=0
 B=1
@@ -546,7 +546,7 @@ class Venom:
         self.go2MotionStartPos()
         input("Press Enter to Begin Motion")
         while True:
-            self.Creep_sandDune()
+            self.Trot()
             # input()
 
 
