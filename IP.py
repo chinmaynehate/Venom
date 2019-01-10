@@ -199,9 +199,9 @@ def calculateSlope(centers_list):
 def getSlopeError():
 	# global cap
 	cap =cv.VideoCapture(k.CAMERA_ID)
-	for i in range(0,2):
+	for i in range(0,5):
 		ret,image= cap.read()
-	# cv.imshow("ret",image)
+	#cv.imshow("ret",image)
 	# key = cv.waitKey(1) & 0xFF
 	# if key == ord('q'):
 	# 	cap.release()
@@ -214,9 +214,11 @@ def getSlopeError():
 	global centers_list
 	font= cv.FONT_HERSHEY_SIMPLEX
 	gray_still= cv.cvtColor(image,cv.COLOR_BGR2GRAY)
+	cv.imshow("grey",gray_still)
 	bilateral_filter_gray=cv.bilateralFilter(gray_still,3,60,60)
-	ret,thresh=cv.threshold(bilateral_filter_gray,150,255,cv.THRESH_BINARY)
-	dilate_still=cv.dilate(thresh,np.ones((5,5),np.uint8),9)
+	ret,thresh=cv.threshold(bilateral_filter_gray,210,255,cv.THRESH_BINARY)
+	erode_still = cv.erode(thresh,np.ones((20,20),np.uint8),9)
+	dilate_still=cv.dilate(erode_still,np.ones((5,5),np.uint8),9)
 
 	closed= segment_img(dilate_still,Images,n_slices)  
 	restored_img= restore_img(closed)
@@ -225,31 +227,36 @@ def getSlopeError():
 
 	error_average =errorAverage(restored_img,error_array)
 	global_angle,x1,x2,y1,y2 = calculateSlope(centers_list)	
-	error_array=[]			#Reset 
+	error_array=[]			#Reset 1
 	empty_array = []
 	centers_list = []
 	cv.putText(restored_img,str(global_angle),(0,full_height-50),font,1,(200,0,200),2)
 	error_average =int(error_average)
 	cv.imshow("masked",restored_img)
+	# cv.imshow('gray_still',gray_still)
 	#print (global_angle,error_average)
+
+	key = cv.waitKey(1) & 0xFF
+	if key == ord('q'):
+		cap.release()
+		cv.destroyAllWindows()
+		quit()
+	
 	cap.release()
+
 	return global_angle,error_average,x1,x2,y1,y2
 
-
+import time
 if __name__=="__main__":
 	found = False
 	id=1
 	while True:
-		try:
-			cap =cv.VideoCapture(id)
-			if cap.isOpened():
-				found=True
-		except:
-			pass
+		# getSlopeError()
+		cap =cv.VideoCapture(id)
+		if cap.isOpened():
+			found=True
 
 		if found:
 			print("ID Found:",id)
 			break
 		id+=1
-
-# getSlopeError()

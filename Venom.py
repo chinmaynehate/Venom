@@ -214,16 +214,36 @@ class Venom:
 
     def Trot_followLine(self):
         global_angle, average_error,_,_,_,_ = IP.getSlopeError()
-        
+
         print ("Errors:",global_angle,average_error)
         # input()
 
         error=global_angle
+        if error >0:
+            # self.TrotLeft()
+            print("Going Left")
+        elif error <0:
+            # self.TrotRight()
+            print("Going Right")
+
+        import cv2
+        while True:
+            key = cv2.waitKey(1) & 0xFF 
+            if key == ord('e'):
+                break
+            elif key == ord('q'):
+                cv2.destroyAllWindows()
+                quit()
+
+        
+        
 
         if error >0:
             self.TrotLeft()
+            print("Going Left")
         elif error <0:
             self.TrotRight()
+            print("Going Right")
 
 
 
