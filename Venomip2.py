@@ -12,20 +12,14 @@ C=2
 D=3
 
 
+
 class Venom:
     def __init__(self,servoIndexes=None):
         servo.init()                                #Open Port and Set Baud Rate
         self.Legs = [Leg(),Leg(),Leg(),Leg()]
         if servoIndexes!=None:
             self.setID(servoIndexes)
-
-        self.setDefaults()
-        self.setControlSystemParams()
             
-        
-
-    def setDefaults(self):
-        # Bot Motion Params (Cordinates)
         self.DEFAULT_X =5
         self.DEFAULT_Z = -17
         self.Y_MAX = 7
@@ -33,19 +27,12 @@ class Venom:
         self.Y_MEAN = (self.Y_MIN+self.Y_MAX)/2  
         self.Z_STEP_UP_HEIGHT = -15
 
-
         self.totalShiftSize = (self.Y_MAX-self.Y_MIN)/2
         self.stanceIncrements = 2.5
 
         # Delays
         self.shiftAllInterDelay = 0.01
         self.trotDelay = 0.09
-
-    def setControlSystemParams(self):
-        self.Kp = 1
-
-
-
 
     def setID(self,ID):
         for i in range(0,4):
@@ -106,14 +93,133 @@ class Venom:
         self.currentYc = -self.Y_MIN
         self.currentYd = -self.Y_MEAN
 
-        
+    def Creep_Turn_Right(self):
+
+        # Step 1 - Step Leg B Forward
+        self.Legs[B].StepInY(-1,5)
+        self.currentYb = 5
+
+        # input("Press Any Key to PushBack1")
+        # Step 1.2 - Push Forward
+        self.stanceBackward(self.stanceIncrements,self.totalShiftSize)
+
+
+        # Step 2 - Step Leg D Forward
+        self.Legs[D].StepInY(-self.Y_MAX,-self.Y_MIN)
+        self.currentYd = -self.Y_MIN
+
+        # Step 2.1 - Step Leg A Forward
+        self.Legs[A].StepInY(self.Y_MIN,self.Y_MAX)
+        self.currentYa = self.Y_MAX
+
+        # input("Press Any Key to PushBack2")
+        # Step 2.2 - Push Forward
+        self.stanceBackward(self.stanceIncrements,self.totalShiftSize)
+
+        # Step 3 - Step Leg C Forward
+        self.Legs[C].StepInY(-5,1)
+        self.currentYc = 1
+
+    def Creep_Turn_Left(self):
+
+        # Step 1 - Step Leg B Forward
+        self.Legs[B].StepInY(self.Y_MIN,self.Y_MAX)
+        self.currentYb = self.Y_MAX
+
+        # input("Press Any Key to PushBack1")
+        # Step 1.2 - Push Forward
+        self.stanceBackward(self.stanceIncrements,self.totalShiftSize)
+
+
+        # Step 2 - Step Leg D Forward
+        self.Legs[D].StepInY(-5,1)
+        self.currentYd = 1
+
+        # Step 2.1 - Step Leg A Forward
+        self.Legs[A].StepInY(-1,5)
+        self.currentYa = 5
+
+        # input("Press Any Key to PushBack2")
+        # Step 2.2 - Push Forward
+        self.stanceBackward(self.stanceIncrements,self.totalShiftSize)
+
+        # Step 3 - Step Leg C Forward
+        self.Legs[C].StepInY(-self.Y_MAX,-self.Y_MIN)
+        self.currentYc = -self.Y_MIN
+
+
+    def Creep_sandDune(self):
+
+        input()
+        # Step 1 - Step Leg B Forward
+        self.Legs[B].z=self.DEFAULT_Z + 7
+        self.Legs[B].Z_STEP_UP_HEIGHT=self.Z_STEP_UP_HEIGHT + 7
+        self.Legs[B].x = self.DEFAULT_X + 1.5
+        self.Legs[B].StepInY(self.Y_MIN,self.Y_MAX)
+        self.currentYb = self.Y_MAX
+
+        # input("Press Any Key to PushBack1")
+        # Step 1.2 - Push Forward
+        self.stanceBackward(self.stanceIncrements,self.totalShiftSize)
+
+
+        # Step 2 - Step Leg D Forward
+        input()
+        self.Legs[D].StepInY(-self.Y_MAX,-self.Y_MIN)
+        self.currentYd = -self.Y_MIN
+
+        # Step 2.1 - Step Leg A Forward
+        input()
+        self.Legs[A].z=self.DEFAULT_Z + 7
+        self.Legs[A].Z_STEP_UP_HEIGHT=self.Z_STEP_UP_HEIGHT + 7
+        self.Legs[A].x = self.DEFAULT_X + 1.5
+        self.Legs[A].StepInY(self.Y_MIN,self.Y_MAX)
+        self.currentYa = self.Y_MAX
+
+        # input("Press Any Key to PushBack2")
+        # Step 2.2 - Push Forward
+        self.stanceBackward(self.stanceIncrements,self.totalShiftSize)
+
+        # Step 3 - Step Leg C Forward
+        input()
+        self.Legs[C].StepInY(-self.Y_MAX,-self.Y_MIN)
+        self.currentYc = -self.Y_MIN
+
+    def Creep(self):
+
+        # Step 1 - Step Leg B Forward
+        self.Legs[B].StepInY(self.Y_MIN,self.Y_MAX)
+        self.currentYb = self.Y_MAX
+
+        # input("Press Any Key to PushBack1")
+        # Step 1.2 - Push Forward
+        self.stanceBackward(self.stanceIncrements,self.totalShiftSize)
+
+
+        # Step 2 - Step Leg D Forward
+        self.Legs[D].StepInY(-self.Y_MAX,-self.Y_MIN)
+        self.currentYd = -self.Y_MIN
+
+        # Step 2.1 - Step Leg A Forward
+        self.Legs[A].StepInY(self.Y_MIN,self.Y_MAX)
+        self.currentYa = self.Y_MAX
+
+        # input("Press Any Key to PushBack2")
+        # Step 2.2 - Push Forward
+        self.stanceBackward(self.stanceIncrements,self.totalShiftSize)
+
+        # Step 3 - Step Leg C Forward
+        self.Legs[C].StepInY(-self.Y_MAX,-self.Y_MIN)
+        self.currentYc = -self.Y_MIN
+
+
     def Trot_followLine(self):
         global_angle, average_error,_,_,_,_ = IP.getSlopeError()
 
         print ("Errors:",global_angle,average_error)
         # input()
 
-        error=average_error
+        error=global_angle
         if error >0:
             # self.TrotLeft()
             print("Going Left")
@@ -358,13 +464,9 @@ class Venom:
         pass                #TODO
 
 
-
-    def TrotLeft(self,error=None):
-        if error==None:
-            self.Y_MAX2 = 3
-            self.Y_MIN2 = -1.5
-        else:
-            pass
+    def TrotLeft(self):
+        self.Y_MAX2 = 1
+        self.Y_MIN2 = -1
         # Step 1 - Step Leg B And D Forward and PushBack Leg A and C Back
         
         # 1.Pickup the Leg
@@ -416,8 +518,8 @@ class Venom:
 
 
     def TrotRight(self):
-        self.Y_MAX2 = 3         #initially 3 
-        self.Y_MIN2 = -1.5      #initially -1.5
+        self.Y_MAX2 = 1         #initially 3 
+        self.Y_MIN2 = -1      #initially -1.5
         # Step 1 - Step Leg B And D Forward and PushBack Leg A and C Back
         
         # 1.Pickup the Leg
@@ -470,11 +572,11 @@ class Venom:
 
     def walk(self):
         self.go2MotionStartPos()
-        input("Enter to Begin Motion")
-
+        input("Press Enter to Begin Motion")
         while True:
+            
             self.Trot_followLine()
-
+            # input()
 
 
  
@@ -541,6 +643,8 @@ class Leg:
         # Drop Down the Leg
         self.setLegPos(self.x,to_y,self.z)
         time.sleep(self.STEP_UP_DELAY)
+
+
 
 
 if __name__=="__main__":

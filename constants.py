@@ -1,9 +1,9 @@
-ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB3"
+ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB0"
 
 # DXL_LIB_PATH = "/home/chinmay/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
 DXL_LIB_PATH = "/home/chinmay/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
 # Camera ID
-CAMERA_ID = 4
+CAMERA_ID = 1
 
 
 

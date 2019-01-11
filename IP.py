@@ -167,7 +167,7 @@ def calculateSlope(centers_list):
 			diff_y = y2-y1
 			diff_x = x2-x1
 			slope = 1.0*diff_y/diff_x
-			print(slope)
+			# print(slope)
 	elif prev_slope<0 :
 		slope = -5729.57789312
 	elif prev_slope>0 :
@@ -201,7 +201,7 @@ def getSlopeError():
 	cap =cv.VideoCapture(k.CAMERA_ID)
 	for i in range(0,5):
 		ret,image= cap.read()
-	#cv.imshow("ret",image)
+	cv.imshow("ret",image)
 	# key = cv.waitKey(1) & 0xFF
 	# if key == ord('q'):
 	# 	cap.release()
@@ -214,9 +214,9 @@ def getSlopeError():
 	global centers_list
 	font= cv.FONT_HERSHEY_SIMPLEX
 	gray_still= cv.cvtColor(image,cv.COLOR_BGR2GRAY)
-	cv.imshow("grey",gray_still)
+	# cv.imshow("grey",gray_still)
 	bilateral_filter_gray=cv.bilateralFilter(gray_still,3,60,60)
-	ret,thresh=cv.threshold(bilateral_filter_gray,210,255,cv.THRESH_BINARY)
+	ret,thresh=cv.threshold(bilateral_filter_gray,190,255,cv.THRESH_BINARY)
 	erode_still = cv.erode(thresh,np.ones((20,20),np.uint8),9)
 	dilate_still=cv.dilate(erode_still,np.ones((5,5),np.uint8),9)
 
@@ -243,6 +243,8 @@ def getSlopeError():
 		quit()
 	
 	cap.release()
+
+	error_average-=50			#positive then Go Left , -ve then go right
 
 	return global_angle,error_average,x1,x2,y1,y2
 
