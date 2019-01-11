@@ -3,8 +3,11 @@ import kinematics as ik
 import constants as k
 from constants import TOP,MIDDLE,BOTTOM
 import time 
-import IP
-#import ip2 
+import ImageProcessing as ip
+import cv2
+from helpers import calculateYs
+
+
 # Leg Constants
 A=0
 B=1
@@ -43,6 +46,9 @@ class Venom:
 
     def setControlSystemParams(self):
         self.Kp = 1
+
+        self.Y_MAX_adjusted = 0
+        self.Y_MIN_adjusted = 0
 
 
 
@@ -107,11 +113,12 @@ class Venom:
         self.currentYd = -self.Y_MEAN
 
         
+
     def Trot_followLine(self):
-        global_angle, average_error,_,_,_,_ = IP.getSlopeError()
+        global_angle, average_error,_,_,_,_ = ip.getSlopeError()
 
         print ("Errors:",global_angle,average_error)
-        # input()
+
 
         error=average_error
         if error >0:
@@ -121,7 +128,9 @@ class Venom:
             # self.TrotRight()
             print("Going Right")
 
-        import cv2
+        self.Y_MAX_adjusted,self.Y_MIN_adjusted=calculateYs(global_angle,average_error)
+        print("Ymax :",self.Y_MAX_adjusted," , Ymin :" , self.Y_MIN_adjusted)
+
         while True:
             key = cv2.waitKey(1) & 0xFF 
             if key == ord('e'):
@@ -134,10 +143,10 @@ class Venom:
         
 
         if error >0:
-            self.TrotLeft()
+            self.TrotLeft(correction=True)
             print("Going Left")
         elif error <0:
-            self.TrotRight()
+            self.TrotRight(correction=True)
             print("Going Right")
 
 
@@ -359,12 +368,15 @@ class Venom:
 
 
 
-    def TrotLeft(self,error=None):
-        if error==None:
+    def TrotLeft(self,correction=False):
+        
+        if correction:
+            self.Y_MAX2 = self.Y_MAX_adjusted
+            self.Y_MIN2 = self.Y_MIN_adjusted
+        else:
             self.Y_MAX2 = 3
             self.Y_MIN2 = -1.5
-        else:
-            pass
+        
         # Step 1 - Step Leg B And D Forward and PushBack Leg A and C Back
         
         # 1.Pickup the Leg
@@ -415,9 +427,16 @@ class Venom:
         # input("Enter to Proceed1")
 
 
-    def TrotRight(self):
-        self.Y_MAX2 = 3         #initially 3 
-        self.Y_MIN2 = -1.5      #initially -1.5
+    def TrotRight(self,correction=False):
+        
+        if correction:
+            self.Y_MAX2 = self.Y_MAX_adjusted
+            self.Y_MIN2 = self.Y_MIN_adjusted
+        else:
+            self.Y_MAX2 = 3
+            self.Y_MIN2 = -1.5
+
+
         # Step 1 - Step Leg B And D Forward and PushBack Leg A and C Back
         
         # 1.Pickup the Leg
