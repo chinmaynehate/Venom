@@ -25,16 +25,15 @@ class Venom:
         self.setDefaults()
         self.setControlSystemParams()
             
-        
 
     def setDefaults(self):
         # Bot Motion Params (Cordinates)
-        self.DEFAULT_X =5
-        self.DEFAULT_Z = -17
+        self.DEFAULT_X =7
+        self.DEFAULT_Z = -20
         self.Y_MAX = 7
         self.Y_MIN = -2
         self.Y_MEAN = (self.Y_MIN+self.Y_MAX)/2  
-        self.Z_STEP_UP_HEIGHT = -15
+        self.Z_STEP_UP_HEIGHT = -18
 
 
         self.totalShiftSize = (self.Y_MAX-self.Y_MIN)/2
@@ -42,7 +41,7 @@ class Venom:
 
         # Delays
         self.shiftAllInterDelay = 0.01
-        self.trotDelay = 0.09
+        self.trotDelay = 0.10
 
     def setControlSystemParams(self):
         self.Kp = 1
@@ -152,31 +151,32 @@ class Venom:
 
 
     def Trot(self):
-        global_angle, average_error,_,_,_,_ = IP.getSlopeError()
-        
-        print (global_angle,average_error)
         # input()
         # Step 1 - Step Leg B And D Forward and PushBack Leg A and C Back
         
         # 1.Pickup the Leg
+        MODZ = 0
+        MOD_D = 0
+        
+        
 
         self.Legs[B].setLegPos(self.DEFAULT_X,self.Y_MIN,self.Z_STEP_UP_HEIGHT)
-        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MAX,self.Z_STEP_UP_HEIGHT)
+        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MAX,self.Z_STEP_UP_HEIGHT+ MODZ )
 
         time.sleep(self.trotDelay)
         # input("Enter to Proceed1")
         # 1.Rotate Top
         self.Legs[B].setLegPos(self.DEFAULT_X,self.Y_MAX,self.Z_STEP_UP_HEIGHT)
-        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.Z_STEP_UP_HEIGHT)
+        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.Z_STEP_UP_HEIGHT+ MODZ)
 
-        self.Legs[A].setLegPos(self.DEFAULT_X,self.Y_MIN,self.DEFAULT_Z)
-        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MAX,self.DEFAULT_Z)
+        self.Legs[A].setLegPos(self.DEFAULT_X,self.Y_MIN,self.DEFAULT_Z+ MOD_D)
+        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MAX,self.DEFAULT_Z+ MODZ)
 
         time.sleep(self.trotDelay)
         # input("Enter to Proceed2")
         # 1.Drop Down the Leg
-        self.Legs[B].setLegPos(self.DEFAULT_X,self.Y_MAX,self.DEFAULT_Z)
-        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.DEFAULT_Z)
+        self.Legs[B].setLegPos(self.DEFAULT_X,self.Y_MAX,self.DEFAULT_Z+ MOD_D)
+        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.DEFAULT_Z+ MODZ)
         time.sleep(self.trotDelay)
         # input("Enter to Proceed")
 
@@ -185,22 +185,22 @@ class Venom:
         # 1.Pickup the Leg
 
         self.Legs[A].setLegPos(self.DEFAULT_X,self.Y_MIN,self.Z_STEP_UP_HEIGHT)
-        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MAX,self.Z_STEP_UP_HEIGHT)
+        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MAX,self.Z_STEP_UP_HEIGHT+ MODZ)
 
         time.sleep(self.trotDelay)
         # input("Enter to Proceed3")
         # 1.Rotate Top
         self.Legs[A].setLegPos(self.DEFAULT_X,self.Y_MAX,self.Z_STEP_UP_HEIGHT)
-        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.Z_STEP_UP_HEIGHT)
+        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.Z_STEP_UP_HEIGHT+ MODZ)
 
-        self.Legs[B].setLegPos(self.DEFAULT_X,self.Y_MIN,self.DEFAULT_Z)
-        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MAX,self.DEFAULT_Z)
+        self.Legs[B].setLegPos(self.DEFAULT_X,self.Y_MIN,self.DEFAULT_Z+ MOD_D)
+        self.Legs[D].setLegPos(self.DEFAULT_X,-self.Y_MAX,self.DEFAULT_Z+ MODZ)
 
         time.sleep(self.trotDelay)
         # input("Enter to Proceed")
         # 1.Drop Down the Leg
-        self.Legs[A].setLegPos(self.DEFAULT_X,self.Y_MAX,self.DEFAULT_Z)
-        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.DEFAULT_Z)
+        self.Legs[A].setLegPos(self.DEFAULT_X,self.Y_MAX,self.DEFAULT_Z+ MOD_D)
+        self.Legs[C].setLegPos(self.DEFAULT_X,-self.Y_MIN,self.DEFAULT_Z+ MODZ)
 
         time.sleep(self.trotDelay)
         # input("Enter to Proceed1")
@@ -492,7 +492,7 @@ class Venom:
         input("Enter to Begin Motion")
 
         while True:
-            self.Trot_followLine()
+            self.Trot()
 
 
 

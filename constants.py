@@ -1,4 +1,4 @@
-ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB0"
+ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB1"
 
 # DXL_LIB_PATH = "/home/chinmay/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
 DXL_LIB_PATH = "/home/chinmay/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"

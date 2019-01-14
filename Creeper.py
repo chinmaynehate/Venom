@@ -3,8 +3,6 @@ import kinematics as ik
 import constants as k
 from constants import TOP,MIDDLE,BOTTOM
 import time 
-import IP
-#import ip2 
 # Leg Constants
 A=0
 B=1
