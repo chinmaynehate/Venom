@@ -1,6 +1,8 @@
 package com.example.androidcontroller;
 
 import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -93,7 +95,10 @@ public class MainActivity extends AppCompatActivity {
 
     void setIPAddress(String ip,int port)
     {
-        isIpSet=true;
+        if(isIpSet ==false)
+        {
+            isIpSet=true;
+        }
         IpAddress =  ip;
         wifiModulePort=port;
         Log.i("JOYCONS","IP_Address is set to :" + IpAddress+" , Port:"+Integer.toString(port));
