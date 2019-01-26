@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#000000"
+        >
+
+        <!--Connection Settings-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="IP-Address:"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="#FFFFFF"
+                />
+
+            <EditText
+                android:id="@+id/ipEditText"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="192.168.0.104:21565"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/setIP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:backgroundTint="#EE1000"
+                android:text="Connect"
+                android:textColor="#FFFFFF" />
+
+        </LinearLayout>
+
+
+        <!--JoyCon Parameters-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="Strength :"
+                android:textColor="#FFFFFF"/>
+
+            <TextView
+                android:id="@+id/strengthVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="20dp"
+                android:text="0%"
+                android:textColor="#FFFFFF"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="Angle :"
+                android:textColor="#FFFFFF"/>
+
+            <TextView
+                android:id="@+id/angleVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="20dp"
+                android:text="0°"
+                android:textColor="#FFFFFF"/>
+
+        </LinearLayout>
+
+        <!--Joy Stick-->
+        <io.github.controlwear.virtual.joystick.android.JoystickView xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/joycon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            custom:JV_backgroundColor="#000000"
+            custom:JV_borderColor="#252525"
+            custom:JV_borderWidth="4dp"
+            custom:JV_buttonColor="#FFFFFF"
+            custom:JV_buttonSizeRatio="15%"
+            custom:JV_fixedCenter="false" />
+
+
+        <!--Buttons-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--1st Layer-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:text="Trot"
+                    android:layout_gravity="center"
+                    android:backgroundTint="#FF9800"
+                    android:textColor="#FFFFFF"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp"
+                    android:textSize="16dp"/>
+
+
+            </LinearLayout>
+
+            <!--2nd Layer-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_margin="20dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:text="Creep"
+                    android:layout_marginLeft="40dp"
+                    android:backgroundTint="#E91E63"
+                    android:textColor="#FFFFFF"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp"
+                    android:textSize="16dp"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:text="B"
+                    android:layout_marginLeft="100dp"
+                    android:backgroundTint="#673AB7"
+                    android:textColor="#FFFFFF"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp"
+                    android:textSize="16dp"
+                    />
+
+
+
+            </LinearLayout>
+
+            <!--3rd Layer-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:text="A"
+                    android:layout_gravity="center"
+                    android:backgroundTint="#2196F3"
+                    android:textColor="#FFFFFF"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp"
+                    android:textSize="16dp"/>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>
