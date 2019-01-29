@@ -2,15 +2,10 @@ ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB1"
 
 # DXL_LIB_PATH = "/home/chinmay/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
 DXL_LIB_PATH = "/home/chinmay/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
-# Camera ID
-CAMERA_ID = 1
 
 
 
 ENABLE_DXL_MESSAGES = False
-ENABLE_DEBUG_MESSAGES = True
-
-
 
 # Servo Props
 servoId = [9,18,11,16,2,3,12,13,17,14,8,1]
@@ -34,9 +29,12 @@ linkLength = [5.5,0,8.3,14.1]
 
 # Reference Constants
 A = 0
-B = 3
-C = 6
-D = 9
+B = 1
+C = 2
+D = 3
 TOP = 0
 MIDDLE = 1
 BOTTOM = 2
+
+CREEP = 0
+TROT = 1

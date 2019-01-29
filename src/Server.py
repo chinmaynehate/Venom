@@ -16,6 +16,9 @@ tcpSerSock.listen(0)
 
 Sdata = ""
 
+def init():
+	pass
+
 def getInput():
 	while True:
 			# print ('Waiting for connection')
