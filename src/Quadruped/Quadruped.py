@@ -7,38 +7,7 @@ import smartServo as servo
 import kinematics as ik
 import time
 
-
-class Creep:
-    def __init__(self):
-        # Creep Parameters
-        self.DEFAULT_X =7
-        self.DEFAULT_Z = -20
-        self.Y_MAX = 7
-        self.Y_MIN = -2
-        self.Y_MEAN = (self.Y_MIN+self.Y_MAX)/2  
-        self.Z_STEP_UP_HEIGHT = -18
-        self.totalShiftSize = (self.Y_MAX-self.Y_MIN)/2
-        self.stanceIncrements = 2.5
-        # Delays
-        self.shiftAllInterDelay = 0.01
-
-class Trot:
-    def __init__(self):
-        # Trot Parameters
-        self.DEFAULT_X =7
-        self.DEFAULT_Z = -20
-        self.Y_MAX = 7
-        self.Y_MIN = -2
-          
-        self.Z_STEP_UP_HEIGHT = -18
-
-
-        self.trotDelay = 0.1
     
-    
-
-
-
 class Quadruped:
     def __init__(self,servoIndexes=None):
         servo.init()                                #Open Port and Set Baud Rate

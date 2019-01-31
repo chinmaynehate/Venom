@@ -3,9 +3,41 @@ ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB1"
 # DXL_LIB_PATH = "/home/chinmay/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
 DXL_LIB_PATH = "/home/carnage/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
 
-
-
 ENABLE_DXL_MESSAGES = False
+
+
+class Creep:
+    def __init__(self):
+        # Creep Parameters
+        self.DEFAULT_X =7
+        self.DEFAULT_Z = -20
+        self.Y_MAX = 7
+        self.Y_MIN = -2
+        self.Y_MEAN = (self.Y_MIN+self.Y_MAX)/2  
+        self.Z_STEP_UP_HEIGHT = -18
+        self.totalShiftSize = (self.Y_MAX-self.Y_MIN)/2
+        self.stanceIncrements = 2.5
+        # Delays
+        self.shiftAllInterDelay = 0.01
+
+class Trot:
+    def __init__(self):
+        # Trot Parameters
+        self.DEFAULT_X =7
+        self.DEFAULT_Z = -20
+        self.Y_MAX = 7
+        self.Y_MIN = -2
+          
+        self.Z_STEP_UP_HEIGHT = -18
+
+
+        self.trotDelay = 0.1
+
+
+
+
+
+
 
 # Servo Props
 servoId = [9,18,11,16,2,3,12,13,17,14,8,1]
