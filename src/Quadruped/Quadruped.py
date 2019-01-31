@@ -79,6 +79,7 @@ class Quadruped:
 
         
     def Trot(self,diffFactor=None):
+        
         if diffFactor!=None:
             if diffFactor>=0:       #Turn Right
                 left_Y_MAX = self.trot.Y_MAX
@@ -190,13 +191,16 @@ class Quadruped:
 
 
     def walk(self,Mode,diffFactor=None):
-        if Mode == CREEP:
-            self.Creep(diffFactor)
-        elif Mode == TROT:
-            self.Trot(diffFactor)
-        else:
-            print("Walking Mode is Not Specified")
-            quit()
+        self.go2CreepStartPosition()
+        while True:
+            input("Press Enter")
+            if Mode == CREEP:
+                self.Creep(diffFactor)
+            elif Mode == TROT:
+                self.Trot(diffFactor)
+            else:
+                print("Walking Mode is Not Specified")
+                quit()
         
 
 
@@ -266,4 +270,5 @@ class Leg:
 
 if __name__=="__main__":
     venom = Quadruped(servoId)
+    venom.setParams(dirVector,FixedPoints)
     venom.walk(TROT)

@@ -29,6 +29,7 @@ class Trot:
         self.Y_MIN = -2
           
         self.Z_STEP_UP_HEIGHT = -18
+        self.Z_PICKUP_HEIGHT_TROT = -18
 
 
         self.trotDelay = 0.1
@@ -40,7 +41,7 @@ class Trot:
 
 
 # Servo Props
-servoId = [9,18,11,16,2,3,12,13,17,14,8,1]
+servoId = [9,18,11,16,2,3,12,13,17,14,8,15]
 SERVO_RES = 0.2932551319648094
 
 #Set-Point of Each Servo
