@@ -1,5 +1,9 @@
+import sys
+sys.path.insert(0, "../Core")
+
 import smartServo as servo
 import time
+
 
 if __name__ == '__main__':
     

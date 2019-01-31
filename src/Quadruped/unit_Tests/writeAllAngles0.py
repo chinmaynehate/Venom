@@ -1,3 +1,7 @@
+import sys
+sys.path.insert(0, "../Core")
+sys.path.insert(0, "..")
+
 import smartServo as sServo
 import constants as k
 

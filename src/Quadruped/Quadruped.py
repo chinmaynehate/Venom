@@ -1,3 +1,7 @@
+import sys
+sys.path.insert(0, "Core")
+sys.path.insert(0, "unit_Tests")
+
 from constants import *
 import smartServo as servo
 import kinematics as ik

@@ -1,5 +1,10 @@
+import sys
+sys.path.insert(0, "..")
+
 import servo_functions as servos
 import constants as k
+
+
 
 def init():
     return servos.enable_port()

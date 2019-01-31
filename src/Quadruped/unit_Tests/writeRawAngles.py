@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, "../Core")
+sys.path.insert(0, "..")
 import smartServo as servo
 
 if __name__ == '__main__':
