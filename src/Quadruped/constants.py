@@ -9,12 +9,12 @@ ENABLE_DXL_MESSAGES = False
 class Creep:
     def __init__(self):
         # Creep Parameters
-        self.DEFAULT_X =7
-        self.DEFAULT_Z = -20
+        self.DEFAULT_X =6.5
+        self.DEFAULT_Z = -17
         self.Y_MAX = 7
         self.Y_MIN = -2
         self.Y_MEAN = (self.Y_MIN+self.Y_MAX)/2  
-        self.Z_STEP_UP_HEIGHT = -18
+        self.Z_STEP_UP_HEIGHT = -15
         self.totalShiftSize = (self.Y_MAX-self.Y_MIN)/2
         self.stanceIncrements = 2.5
         # Delays
@@ -23,12 +23,12 @@ class Creep:
 class Trot:
     def __init__(self):
         # Trot Parameters
-        self.DEFAULT_X =7
-        self.DEFAULT_Z = -20
+        self.DEFAULT_X =6.5
+        self.DEFAULT_Z = -17
         self.Y_MAX = 7
         self.Y_MIN = -2
           
-        self.Z_STEP_UP_HEIGHT = -18
+        self.Z_STEP_UP_HEIGHT = -15
         self.Z_PICKUP_HEIGHT_TROT = -18
 
 
@@ -41,7 +41,7 @@ class Trot:
 
 
 # Servo Props
-servoId = [9,18,11,16,2,3,12,13,17,14,8,15]
+servoId = [9,18,11,7,2,3,12,13,17,14,8,15]
 SERVO_RES = 0.2932551319648094
 
 #Set-Point of Each Servo
@@ -52,8 +52,8 @@ FixedPoints = [516+153.45,512,515,
 # Direction of Motion
 dirVector = [-1,1,1,
               1,1,1,
-              1,-1,-1,
-              -1,-1,-1]
+              1,1,1,
+              -1,-1,1]
 
 # Venom Props
 
@@ -71,3 +71,4 @@ BOTTOM = 2
 
 CREEP = 0
 TROT = 1
+TROT_BACK=2
