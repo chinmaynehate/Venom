@@ -6,7 +6,6 @@ from constants import *
 import smartServo as servo
 import kinematics as ik
 import time
-
     
 class Quadruped:
     def __init__(self,servoIndexes=None):
@@ -21,6 +20,7 @@ class Quadruped:
     def setDefaults(self):
         self.creep = Creep()
         self.trot = Trot()
+        self.slope = Slope()
 
     def setID(self,ID):
         for i in range(0,4):
@@ -62,7 +62,30 @@ class Quadruped:
         self.Legs[B].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYb  ,self.creep.DEFAULT_Z)
         self.Legs[C].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYc ,self.creep.DEFAULT_Z)
         self.Legs[D].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYd  ,self.creep.DEFAULT_Z)
-        
+
+    def stanceBackwardSlope(self,YShift,ZShift):
+
+        self.slope.currentZa = self.slope.currentZa - ZShift 
+        self.slope.currentZb = self.slope.currentZb - ZShift 
+        self.slope.currentZc = self.slope.currentZc - ZShift 
+        self.slope.currentZd = self.slope.currentZd - ZShift
+
+        # Write the Input Position to the Legs
+        self.Legs[A].setLegPos(self.slope.DEFAULT_X ,self.slope.currentYa ,self.slope.currentZa)
+        self.Legs[B].setLegPos(self.slope.DEFAULT_X ,self.slope.currentYb  ,self.slope.currentZb)
+        self.Legs[C].setLegPos(self.slope.DEFAULT_X ,self.slope.currentYc ,self.slope.currentZc)
+        self.Legs[D].setLegPos(self.slope.DEFAULT_X ,self.slope.currentYd  ,self.slope.currentZd)
+
+        self.slope.currentYa = self.slope.currentYa - YShift 
+        self.slope.currentYb = self.slope.currentYb - YShift 
+        self.slope.currentYc = self.slope.currentYc - YShift 
+        self.slope.currentYd = self.slope.currentYd - YShift
+
+        self.Legs[A].setLegPos(self.slope.DEFAULT_X ,self.slope.currentYa ,self.slope.currentZa)
+        self.Legs[B].setLegPos(self.slope.DEFAULT_X ,self.slope.currentYb  ,self.slope.currentZb)
+        self.Legs[C].setLegPos(self.slope.DEFAULT_X ,self.slope.currentYc ,self.slope.currentZc)
+        self.Legs[D].setLegPos(self.slope.DEFAULT_X ,self.slope.currentYd  ,self.slope.currentZd)
+
 
     def go2CreepStartPosition(self):
         # Starting Position for Creep Position
@@ -77,7 +100,24 @@ class Quadruped:
         self.creep.currentYc = -self.creep.Y_MIN
         self.creep.currentYd = -self.creep.Y_MEAN
 
+    def go2SlopeStartPosition(self):  #$
+        # Starting Position for Slope Climbing
         
+        self.Legs[A].setLegPos(self.slope.DEFAULT_X, self.slope.Y_MEAN,self.slope.FRONT_Z_MEAN)
+        self.Legs[B].setLegPos(self.slope.DEFAULT_X, self.slope.Y_MIN,self.slope.FRONT_Z_MIN)
+        self.Legs[C].setLegPos(self.slope.DEFAULT_X,-self.slope.Y_MIN,self.slope.BACK_Z_MIN)
+        self.Legs[D].setLegPos(self.slope.DEFAULT_X,-self.slope.Y_MEAN,self.slope.BACK_Z_MEAN)
+
+        self.slope.currentYa =  self.slope.Y_MEAN
+        self.slope.currentYb =  self.slope.Y_MIN
+        self.slope.currentYc = -self.slope.Y_MIN
+        self.slope.currentYd = -self.slope.Y_MEAN
+        
+        self.slope.currentZa = self.slope.FRONT_Z_MEAN
+        self.slope.currentZb = self.slope.FRONT_Z_MIN
+        self.slope.currentZc = self.slope.BACK_Z_MIN
+        self.slope.currentZd = self.slope.BACK_Z_MEAN
+
     def Trot(self,diffFactor=None):
         
         if diffFactor!=None:
@@ -210,48 +250,88 @@ class Quadruped:
         time.sleep(self.trot.trotDelay)
     
 
-    def Creep(self,diffFactor=None):
-        if diffFactor==None:
-            left_Y_MAX=self.creep.Y_MAX
-            left_Y_MIN=self.creep.Y_MIN
-            right_Y_MAX=self.creep.Y_MAX
-            right_Y_MIN=self.creep.Y_MIN
-        else:
-            if diffFactor>=0:       #Turn Right
+    def Creep(self,slope,diffFactor=None):
+       
+        if not slope:
+            if diffFactor==None:
                 left_Y_MAX=self.creep.Y_MAX
                 left_Y_MIN=self.creep.Y_MIN
-                right_Y_MAX=self.creep.Y_MAX*(1.0-diffFactor)/2
-                right_Y_MIN=self.creep.Y_MIN*(1.0-diffFactor)/2
-            else:                   #Turn Left
-                left_Y_MAX=self.creep.Y_MAX*(1.0+diffFactor)/2
-                left_Y_MIN=self.creep.Y_MIN*(1.0+diffFactor)/2
                 right_Y_MAX=self.creep.Y_MAX
                 right_Y_MIN=self.creep.Y_MIN
+            else:
+                if diffFactor>=0:       #Turn Right
+                    left_Y_MAX=self.creep.Y_MAX
+                    left_Y_MIN=self.creep.Y_MIN
+                    right_Y_MAX=self.creep.Y_MAX*(1.0-diffFactor)/2
+                    right_Y_MIN=self.creep.Y_MIN*(1.0-diffFactor)/2
+                else:                   #Turn Left
+                    left_Y_MAX=self.creep.Y_MAX*(1.0+diffFactor)/2
+                    left_Y_MIN=self.creep.Y_MIN*(1.0+diffFactor)/2
+                    right_Y_MAX=self.creep.Y_MAX
+                    right_Y_MIN=self.creep.Y_MIN
 
-        # Step 1 - Step Leg B Forward
-        self.Legs[B].StepInY(right_Y_MIN,right_Y_MAX)
-        self.creep.currentYb = right_Y_MAX
+            # Step 1 - Step Leg B Forward
+            self.Legs[B].StepInY(right_Y_MIN,right_Y_MAX)
+            self.creep.currentYb = right_Y_MAX
 
-        # input("Press Any Key to PushBack1")
-        # Step 1.2 - Push Forward
-        self.stanceBackward(self.creep.totalShiftSize,diffFactor)
+            # input("Press Any Key to PushBack1")
+            # Step 1.2 - Push Forward
+            self.stanceBackward(self.creep.totalShiftSize,diffFactor)
 
 
-        # Step 2 - Step Leg D Forward
-        self.Legs[D].StepInY(-left_Y_MAX,-left_Y_MIN)
-        self.creep.currentYd = -left_Y_MIN
+            # Step 2 - Step Leg D Forward
+            self.Legs[D].StepInY(-left_Y_MAX,-left_Y_MIN)
+            self.creep.currentYd = -left_Y_MIN
 
-        # Step 2.1 - Step Leg A Forward
-        self.Legs[A].StepInY(left_Y_MIN,left_Y_MAX)
-        self.creep.currentYa = left_Y_MAX
+            # Step 2.1 - Step Leg A Forward
+            self.Legs[A].StepInY(left_Y_MIN,left_Y_MAX)
+            self.creep.currentYa = left_Y_MAX
 
-        # input("Press Any Key to PushBack2")
-        # Step 2.2 - Push Forward
-        self.stanceBackward(self.creep.totalShiftSize,diffFactor)
+            # input("Press Any Key to PushBack2")
+            # Step 2.2 - Push Forward
+            self.stanceBackward(self.creep.totalShiftSize,diffFactor)
 
-        # Step 3 - Step Leg C Forward
-        self.Legs[C].StepInY(-right_Y_MAX,-right_Y_MIN)
-        self.currentYc = -right_Y_MIN
+            # Step 3 - Step Leg C Forward
+            self.Legs[C].StepInY(-right_Y_MAX,-right_Y_MIN)
+            self.creep.currentYc = -right_Y_MIN
+        
+        else:
+            Y_MAX = self.slope.Y_MAX
+            Y_MIN = self.slope.Y_MIN
+            FRONT_Z_MAX = self.slope.FRONT_Z_MAX
+            FRONT_Z_MIN = self.slope.FRONT_Z_MIN
+            FRONT_Z_MEAN = self.slope.FRONT_Z_MEAN
+            BACK_Z_MAX = self.slope.BACK_Z_MAX
+            BACK_Z_MIN = self.slope.BACK_Z_MIN
+            BACK_Z_MEAN = self.slope.BACK_Z_MEAN
+
+            # Step 1 - Step Leg B Forward
+            self.Legs[B].StepInYZ(Y_MIN,Y_MAX,FRONT_Z_MAX)
+            self.slope.currentYb = Y_MAX
+            self.slope.currentZb = FRONT_Z_MAX
+
+            # input("Press Any Key to PushBack1")
+            # Step 1.2 - Push Forward
+            self.stanceBackwardSlope(self.slope.Y_STEP/2,self.slope.Z_STEP)
+
+            # Step 2 - Step Leg D Forward
+            self.Legs[D].StepInYZ(-Y_MAX,-Y_MIN,BACK_Z_MIN)
+            self.slope.currentYd = -Y_MIN
+            self.slope.currentZd = BACK_Z_MIN
+
+            # Step 2.1 - Step Leg A Forward
+            self.Legs[A].StepInYZ(Y_MIN,Y_MAX,FRONT_Z_MAX)
+            self.slope.currentYa = Y_MAX
+            self.slope.currentYa = FRONT_Z_MAX
+
+            # input("Press Any Key to PushBack2")
+            # Step 2.2 - Push Forward
+            self.stanceBackwardSlope(self.slope.Y_STEP/2,self.slope.Z_STEP)
+
+            # Step 3 - Step Leg C Forward
+            self.Legs[C].StepInY(-Y_MAX,-Y_MIN,BACK_Z_MIN)
+            self.slope.currentYc = -Y_MIN
+            self.slope.currentZc = BACK_Z_MIN
 
 
     def walk(self,Mode,diffFactor=None):
@@ -276,7 +356,7 @@ class Leg:
         if (ID != None):
             self.setIDs(ID)
     
-        self.Z_STEP_UP_HEIGHT = -9
+        self.Z_STEP_UP_HEIGHT = -9  #$ -9
         self.STEP_UP_DELAY = 0.4
 
 
@@ -332,14 +412,33 @@ class Leg:
         self.setLegPos(self.x,to_y,self.z)
         time.sleep(self.STEP_UP_DELAY)
 
+    def StepInYZ(self,from_y,to_y,to_z):
+        # input("Press Any Key:Leg Pickup")
+        # Pickup the Leg
+        self.setLegPos(self.x,from_y,self.Z_STEP_UP_HEIGHT)
+        # self.joints[BOTTOM].writeAngle(20);
+        
+        time.sleep(self.STEP_UP_DELAY)
+        # input("Press Any Key:Leg Rotate")
+        # Rotate Top
+        self.setLegPos(self.x,to_y,self.Z_STEP_UP_HEIGHT)
+        # self.joints[BOTTOM].writeAngle(20);
+        
+        self.y = to_y 
+        time.sleep(self.STEP_UP_DELAY)
+        # input("Press Any Key:Leg Drop")
+        # Drop Down the Leg
+        self.setLegPos(self.x,to_y,to_z)
+        time.sleep(self.STEP_UP_DELAY)
+
 
 if __name__=="__main__":
     venom = Quadruped(servoId)
     venom.setParams(dirVector,FixedPoints)
     # venom.walk(TROT,-0.2)
-    venom.go2CreepStartPosition()
+    venom.go2SlopeStartPosition()
     input("Press Enter")
 
     while True:
-        venom.Trot_Back()
+        venom.Creep(False)
 

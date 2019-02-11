@@ -1,15 +1,15 @@
-ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB1"
+ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB0"
 
-# DXL_LIB_PATH = "/home/chinmay/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
-DXL_LIB_PATH = "/home/carnage/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
+DXL_LIB_PATH = "/home/shanks/Downloads/Libraries/DynamixelSDK-master/c/build/linux64/libdxl_x64_c.so"
 
 ENABLE_DXL_MESSAGES = False
 
+import numpy as np	#$
 
 class Creep:
     def __init__(self):
         # Creep Parameters
-        self.DEFAULT_X =6.5
+        self.DEFAULT_X = 6.5
         self.DEFAULT_Z = -17
         self.Y_MAX = 7
         self.Y_MIN = -2
@@ -20,10 +20,10 @@ class Creep:
         # Delays
         self.shiftAllInterDelay = 0.01
 
-class Trot:
+class Trot:	
     def __init__(self):
         # Trot Parameters
-        self.DEFAULT_X =6.5
+        self.DEFAULT_X = 6.5
         self.DEFAULT_Z = -17
         self.Y_MAX = 7
         self.Y_MIN = -2
@@ -34,9 +34,29 @@ class Trot:
 
         self.trotDelay = 0.1
 
+class Slope:
+	def __init__(self):
+		#slope Parameters
+		self.DEFAULT_X = 6.5
+		self.BETA = 18.4
+		self.Y_STEP = 4
+		self.Y_MIN = (-1) * self.Y_STEP / 2
+		self.Y_MAX = self.Y_MIN + self.Y_STEP
+		self.Y_MEAN = (self.Y_MIN + self.Y_MAX)/2
+		self.CLEARANCE = 20 #17
 
+		self.THETA = (5) * np.pi / 180
+		self.Z_STEP = self.Y_STEP*np.tan(self.THETA)/2
 
+		#Front Legs are A and B
+		self.FRONT_Z_MAX = -1 * self.CLEARANCE
+		self.FRONT_Z_MIN = -1 * (self.CLEARANCE + self.Y_STEP*np.tan(self.THETA))
+		self.FRONT_Z_MEAN = (self.FRONT_Z_MIN + self.FRONT_Z_MAX)/2
 
+		#Back Legs are C and D
+		self.BACK_Z_MIN = -1 * (np.tan(self.THETA)*(self.BETA + self.Y_STEP + (self.CLEARANCE/np.tan(self.THETA))))
+		self.BACK_Z_MAX = self.BACK_Z_MIN + self.Y_STEP*(np.tan(self.THETA))
+		self.BACK_Z_MEAN = (self.BACK_Z_MIN + self.BACK_Z_MAX)/2
 
 
 
