@@ -281,7 +281,7 @@ class Quadruped:
         elif Mode == TROT:
             self.Trot(diffFactor)
         elif Mode == TROT_BACK:
-            self.Trot_Back(diffFactor)
+            self.Trot(diffFactor,direction=-1)
         else:
             print("Walking Mode is Not Specified")
             quit()
