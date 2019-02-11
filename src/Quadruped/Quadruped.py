@@ -94,6 +94,7 @@ class Quadruped:
         self.Legs[B].setLegPos(self.creep.DEFAULT_X, self.creep.Y_MIN,self.creep.DEFAULT_Z)
         self.Legs[C].setLegPos(self.creep.DEFAULT_X,-self.creep.Y_MIN,self.creep.DEFAULT_Z)
         self.Legs[D].setLegPos(self.creep.DEFAULT_X,-self.creep.Y_MEAN,self.creep.DEFAULT_Z)
+        
 
         self.creep.currentYa =  self.creep.Y_MEAN
         self.creep.currentYb =  self.creep.Y_MIN
@@ -107,6 +108,16 @@ class Quadruped:
         self.Legs[B].setLegPos(self.slope.DEFAULT_X, self.slope.Y_MIN,self.slope.FRONT_Z_MIN)
         self.Legs[C].setLegPos(self.slope.DEFAULT_X,-self.slope.Y_MIN,self.slope.BACK_Z_MIN)
         self.Legs[D].setLegPos(self.slope.DEFAULT_X,-self.slope.Y_MEAN,self.slope.BACK_Z_MEAN)
+
+
+        print("Front Z Params:" , self.slope.FRONT_Z_MEAN,",",self.slope.FRONT_Z_MIN)
+        print("Back Z Params:" , self.slope.BACK_Z_MEAN,",",self.slope.BACK_Z_MIN)
+        # print("Front Y Params:" , self.slope.Y_MEAN,",",self.slope.Y_MIN)
+
+        # self.Legs[A].setLegPos(6.5, 0,-12)
+        # self.Legs[B].setLegPos(6.5, 5,-12)
+        # self.Legs[C].setLegPos(6.5,-5,-18)
+        # self.Legs[D].setLegPos(6.5,-0,-18)
 
         self.slope.currentYa =  self.slope.Y_MEAN
         self.slope.currentYb =  self.slope.Y_MIN
@@ -261,14 +272,14 @@ class Quadruped:
             # Step 2.1 - Step Leg A Forward
             self.Legs[A].StepInYZ(Y_MIN,Y_MAX,FRONT_Z_MAX)
             self.slope.currentYa = Y_MAX
-            self.slope.currentYa = FRONT_Z_MAX
+            self.slope.currentZa = FRONT_Z_MAX
 
             # input("Press Any Key to PushBack2")
             # Step 2.2 - Push Forward
             self.stanceBackwardSlope(self.slope.Y_STEP/2,self.slope.Z_STEP)
 
             # Step 3 - Step Leg C Forward
-            self.Legs[C].StepInY(-Y_MAX,-Y_MIN,BACK_Z_MIN)
+            self.Legs[C].StepInYZ(-Y_MAX,-Y_MIN,BACK_Z_MIN)
             self.slope.currentYc = -Y_MIN
             self.slope.currentZc = BACK_Z_MIN
 
@@ -379,5 +390,4 @@ if __name__=="__main__":
     input("Press Enter")
 
     while True:
-        venom.Creep(False)
-
+        venom.Creep(True)

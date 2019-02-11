@@ -1,6 +1,8 @@
 ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB0"
 
-DXL_LIB_PATH = "/home/shanks/Downloads/Libraries/DynamixelSDK-master/c/build/linux64/libdxl_x64_c.so"
+# DXL_LIB_PATH = "/home/carnage/Downloads/Libraries/DynamixelSDK-master/c/build/linux64/libdxl_x64_c.so"
+DXL_LIB_PATH = "/home/carnage/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
+
 
 ENABLE_DXL_MESSAGES = False
 
@@ -43,9 +45,9 @@ class Slope:
 		self.Y_MIN = (-1) * self.Y_STEP / 2
 		self.Y_MAX = self.Y_MIN + self.Y_STEP
 		self.Y_MEAN = (self.Y_MIN + self.Y_MAX)/2
-		self.CLEARANCE = 20 #17
+		self.CLEARANCE = 15.0 #17
 
-		self.THETA = (5) * np.pi / 180
+		self.THETA = (10.0) * np.pi / 180
 		self.Z_STEP = self.Y_STEP*np.tan(self.THETA)/2
 
 		#Front Legs are A and B
