@@ -118,7 +118,7 @@ class Quadruped:
         self.slope.currentZc = self.slope.BACK_Z_MIN
         self.slope.currentZd = self.slope.BACK_Z_MEAN
 
-    def Trot(self,diffFactor=None):
+    def Trot(self,diffFactor=None,direction=1):
         
         if diffFactor!=None:
             if diffFactor>=0:       #Turn Right
@@ -136,6 +136,12 @@ class Quadruped:
             left_Y_MIN = self.trot.Y_MIN
             right_Y_MAX = self.trot.Y_MAX
             right_Y_MIN = self.trot.Y_MIN
+
+        
+        if direction <0:        # Change the Direction of Motion 
+            # Swap the right_Y and Left Y
+            right_Y_MAX,right_Y_MIN = right_Y_MIN,right_Y_MAX
+            left_Y_MAX,left_Y_MIN = left_Y_MIN,left_Y_MAX
 
 
         # Step 1 - Step Leg B And D Forward and PushBack Leg A and C Back
@@ -182,74 +188,7 @@ class Quadruped:
         self.Legs[C].setLegPos(self.trot.DEFAULT_X,-right_Y_MIN,self.trot.DEFAULT_Z)
 
         time.sleep(self.trot.trotDelay)
-    
-
-    def Trot_Back(self,diffFactor=None):
         
-        if diffFactor!=None:
-            if diffFactor>=0:       #Turn Right
-                left_Y_MAX = self.trot.Y_MAX
-                left_Y_MIN = self.trot.Y_MIN
-                right_Y_MAX = self.trot.Y_MAX*(1.0-diffFactor)/2
-                right_Y_MIN = self.trot.Y_MIN*(1.0-diffFactor)/2    
-            else:                   #Turn Left
-                left_Y_MAX = self.trot.Y_MAX*(1.0+diffFactor)/2
-                left_Y_MIN = self.trot.Y_MIN*(1.0+diffFactor)/2
-                right_Y_MAX = self.trot.Y_MAX
-                right_Y_MIN = self.trot.Y_MIN
-        else:
-            left_Y_MAX = self.trot.Y_MAX
-            left_Y_MIN = self.trot.Y_MIN
-            right_Y_MAX = self.trot.Y_MAX
-            right_Y_MIN = self.trot.Y_MIN
-
-
-        # Step 1 - Step Leg B And D Forward and PushBack Leg A and C Back
-            # 1.Pickup the Leg
-
-        self.Legs[B].setLegPos(self.trot.DEFAULT_X,right_Y_MAX,self.trot.Z_PICKUP_HEIGHT_TROT)
-        self.Legs[D].setLegPos(self.trot.DEFAULT_X,-left_Y_MIN,self.trot.Z_PICKUP_HEIGHT_TROT)
-
-        time.sleep(self.trot.trotDelay)
-        
-            # 1.Rotate Top
-        self.Legs[B].setLegPos(self.trot.DEFAULT_X,right_Y_MIN,self.trot.Z_STEP_UP_HEIGHT)
-        self.Legs[D].setLegPos(self.trot.DEFAULT_X,-left_Y_MAX,self.trot.Z_STEP_UP_HEIGHT)
-
-        self.Legs[A].setLegPos(self.trot.DEFAULT_X,left_Y_MAX,self.trot.DEFAULT_Z)
-        self.Legs[C].setLegPos(self.trot.DEFAULT_X,-right_Y_MIN,self.trot.DEFAULT_Z)
-
-        time.sleep(self.trot.trotDelay)
-        
-            # 1.Drop Down the Leg
-        self.Legs[B].setLegPos(self.trot.DEFAULT_X,right_Y_MIN,self.trot.DEFAULT_Z)
-        self.Legs[D].setLegPos(self.trot.DEFAULT_X,-left_Y_MAX,self.trot.DEFAULT_Z)
-        time.sleep(self.trot.trotDelay)
-        
-
-        # Step 2 - Step Leg A And C Forward and PushBack Leg B and D Back
-        
-            # 2.Pickup the Leg
-        self.Legs[A].setLegPos(self.trot.DEFAULT_X,left_Y_MAX,self.trot.Z_STEP_UP_HEIGHT)
-        self.Legs[C].setLegPos(self.trot.DEFAULT_X,-right_Y_MIN,self.trot.Z_STEP_UP_HEIGHT)
-
-        time.sleep(self.trot.trotDelay)
-            # 2.Rotate Top
-        self.Legs[A].setLegPos(self.trot.DEFAULT_X,left_Y_MIN,self.trot.Z_STEP_UP_HEIGHT)
-        self.Legs[C].setLegPos(self.trot.DEFAULT_X,-right_Y_MAX,self.trot.Z_STEP_UP_HEIGHT)
-
-        self.Legs[B].setLegPos(self.trot.DEFAULT_X,right_Y_MAX,self.trot.DEFAULT_Z)
-        self.Legs[D].setLegPos(self.trot.DEFAULT_X,-left_Y_MIN,self.trot.DEFAULT_Z)
-
-        time.sleep(self.trot.trotDelay)
-        
-            # 2.Drop Down the Leg
-        self.Legs[A].setLegPos(self.trot.DEFAULT_X,left_Y_MIN,self.trot.DEFAULT_Z)
-        self.Legs[C].setLegPos(self.trot.DEFAULT_X,-right_Y_MAX,self.trot.DEFAULT_Z)
-
-        time.sleep(self.trot.trotDelay)
-    
-
     def Creep(self,slope,diffFactor=None):
        
         if not slope:
