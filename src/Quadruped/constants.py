@@ -41,23 +41,31 @@ class Slope:
 		#slope Parameters
 		self.DEFAULT_X = 6.5
 		self.BETA = 18.4
-		self.Y_STEP = 4
-		self.Y_MIN = (-1) * self.Y_STEP / 2
-		self.Y_MAX = self.Y_MIN + self.Y_STEP
-		self.Y_MEAN = (self.Y_MIN + self.Y_MAX)/2
-		self.CLEARANCE = 15.0 #17
+		self.Y_STEP = 4              #Step Size
+		Y_minimum = -1              #Change this to set Minimum Y for all legs
+		
+		shift = abs(self.Y_STEP/2) - abs(Y_minimum) 	#Shift if Motion
 
-		self.THETA = (10.0) * np.pi / 180
+		self.FRONT_Y_MIN = (-1) * self.Y_STEP / 2			- shift
+		self.BACK_Y_MIN = (-1) * self.Y_STEP / 2			+ shift
+		self.FRONT_Y_MAX = self.FRONT_Y_MIN + self.Y_STEP   
+		self.BACK_Y_MAX = self.BACK_Y_MIN + self.Y_STEP   	
+		self.FRONT_Y_MEAN = (self.FRONT_Y_MIN + self.FRONT_Y_MAX)/2
+		self.BACK_Y_MEAN = (self.BACK_Y_MIN + self.BACK_Y_MAX)/2
+
+		self.CLEARANCE = 12.0 #17
+
+		self.THETA = (10) * np.pi / 180
 		self.Z_STEP = self.Y_STEP*np.tan(self.THETA)/2
 
 		#Front Legs are A and B
-		self.FRONT_Z_MAX = -1 * self.CLEARANCE
-		self.FRONT_Z_MIN = -1 * (self.CLEARANCE + self.Y_STEP*np.tan(self.THETA))
+		self.FRONT_Z_MAX = -1 * (self.CLEARANCE - shift*np.tan(self.THETA))
+		self.FRONT_Z_MIN = -1 * (self.CLEARANCE + self.Y_STEP*np.tan(self.THETA) - shift*np.tan(self.THETA))
 		self.FRONT_Z_MEAN = (self.FRONT_Z_MIN + self.FRONT_Z_MAX)/2
 
 		#Back Legs are C and D
-		self.BACK_Z_MIN = -1 * (np.tan(self.THETA)*(self.BETA + self.Y_STEP + (self.CLEARANCE/np.tan(self.THETA))))
-		self.BACK_Z_MAX = self.BACK_Z_MIN + self.Y_STEP*(np.tan(self.THETA))
+		self.BACK_Z_MIN = -1 * (np.tan(self.THETA)*(self.BETA + self.Y_STEP + (self.CLEARANCE/np.tan(self.THETA))) - shift*np.tan(self.THETA) )
+		self.BACK_Z_MAX = self.BACK_Z_MIN + self.Y_STEP*(np.tan(self.THETA)) + shift*np.tan(self.THETA)
 		self.BACK_Z_MEAN = (self.BACK_Z_MIN + self.BACK_Z_MAX)/2
 
 
