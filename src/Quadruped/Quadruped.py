@@ -6,7 +6,8 @@ from constants import *
 import smartServo as servo
 import kinematics as ik
 import time
-    
+import math
+
 class Quadruped:
     def __init__(self,servoIndexes=None):
         servo.init()                                #Open Port and Set Baud Rate
@@ -126,7 +127,17 @@ class Quadruped:
             self.Legs[C].setLegPos(self.slope.DEFAULT_X,-self.slope.BACK_Y_MEAN,self.slope.BACK_Z_MEAN)
             self.Legs[D].setLegPos(self.slope.DEFAULT_X,-self.slope.BACK_Y_MAX,self.slope.BACK_Z_MAX)
 
-            self.slope.currentYa =  self.slope.FRONT_Y_MEAN
+            # mf1 = (self.slope.FRONT_Z_MIN - self.slope.FRONT_Z_MEAN)/(self.slope.FRONT_Y_MIN - self.slope.FRONT_Y_MEAN)
+            # mf2 = (self.slope.FRONT_Z_MEAN - self.slope.FRONT_Z_MAX)/(self.slope.FRONT_Y_MEAN - self.slope.FRONT_Y_MAX)
+            # mb1 = (self.slope.BACK_Z_MIN - self.slope.BACK_Z_MEAN)/(self.slope.BACK_Y_MIN - self.slope.BACK_Y_MEAN)
+            # mb2 = (self.slope.BACK_Z_MEAN - self.slope.BACK_Z_MAX)/(self.slope.BACK_Y_MEAN - self.slope.BACK_Y_MAX)
+            # print(math.atan(mf1)*180/np.pi, math.atan(mf2)*180/np.pi, math.atan(mb1)*180/np.pi, math.atan(mb2)*180/np.pi)
+            # print("FRONT_Y :",self.slope.FRONT_Y_MAX,self.slope.FRONT_Y_MEAN,self.slope.FRONT_Y_MIN)
+            # print("FRONT_Z :",self.slope.FRONT_Z_MIN,self.slope.FRONT_Z_MEAN,self.slope.FRONT_Z_MAX)
+            # print("BACK_Y :",self.slope.BACK_Y_MIN,self.slope.BACK_Y_MEAN,self.slope.BACK_Y_MAX)
+            # print("BACK_Z :",self.slope.BACK_Z_MIN,self.slope.BACK_Z_MEAN,self.slope.BACK_Z_MAX)
+
+            self.slope.currentYa =  self.slope.FRONT_Y_MIN
             self.slope.currentYb =  self.slope.FRONT_Y_MEAN
             self.slope.currentYc = -self.slope.BACK_Y_MEAN
             self.slope.currentYd = -self.slope.BACK_Y_MAX
