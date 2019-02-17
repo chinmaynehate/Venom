@@ -462,8 +462,9 @@ if __name__=="__main__":
     venom = Quadruped(servoId)
     venom.setParams(dirVector,FixedPoints)
     # venom.walk(TROT,-0.2)
-    venom.go2SlopeStartPosition(2)
+    venom.go2CreepStartPosition()
     input("Press Enter")
 
     while True:
-        venom.Creep(True,2)
+        #venom.Creep(False,1)
+        venom.Trot()
