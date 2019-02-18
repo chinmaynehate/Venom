@@ -1,4 +1,4 @@
-ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB0"
+ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB3"
 
 DXL_LIB_PATH = "/home/shanks/Downloads/Libraries/DynamixelSDK-master/c/build/linux64/libdxl_x64_c.so"
 
@@ -39,31 +39,31 @@ class Slope:
     def __init__(self):
         #slope Parameters
         self.DEFAULT_X = 6.5
-        BETA      = 18.4        #Distance between servo origns along the direction of motion 
-        Y_STEP    = 4       #Step Size
-        CLEARANCE = 12.0        #clearance between FRONT_MAX and bot height
-        THETA     = (10) * np.pi / 180      #Slope angle
-        Y_MINIMUM = -1              #Change this to set Minimum Y for all legs		
-        SHIFT     = Y_STEP/2 - abs(Y_MINIMUM)    #Shift if Motion
+        BETA        = 18.4        #Distance between servo origns along the direction of motion 
+        self.Y_STEP = 4       #Step Size
+        CLEARANCE   = 14.0        #clearance between FRONT_MAX and bot height
+        THETA       = (7.9) * np.pi / 180      #Slope angle
+        Y_MINIMUM   = -1.5              #Change this to set Minimum Y for all legs		
+        SHIFT       = self.Y_STEP/2 - abs(Y_MINIMUM)    #Shift if Motion
 
-        self.FRONT_Y_MAX  = Y_STEP/2 - SHIFT
-        self.FRONT_Y_MIN  = self.FRONT_Y_MAX - Y_STEP
+        self.FRONT_Y_MAX  = self.Y_STEP/2 - SHIFT
+        self.FRONT_Y_MIN  = self.FRONT_Y_MAX - self.Y_STEP
         self.FRONT_Y_MEAN = (self.FRONT_Y_MIN + self.FRONT_Y_MAX)/2
 
-        self.BACK_Y_MAX  = Y_STEP/2 + SHIFT
-        self.BACK_Y_MIN  = self.BACK_Y_MAX - Y_STEP
+        self.BACK_Y_MAX  = self.Y_STEP/2 + SHIFT
+        self.BACK_Y_MIN  = self.BACK_Y_MAX - self.Y_STEP
         self.BACK_Y_MEAN = (self.BACK_Y_MIN + self.BACK_Y_MAX)/2
 
-        self.Z_STEP = Y_STEP*np.tan(THETA)/2
+        self.Z_STEP = self.Y_STEP*np.tan(THETA)/2
 
         #Front Legs are A and B
         self.FRONT_Z_MAX  = -1 * (CLEARANCE)
-        self.FRONT_Z_MIN  = self.FRONT_Z_MAX - Y_STEP*np.tan(THETA)
+        self.FRONT_Z_MIN  = self.FRONT_Z_MAX - self.Y_STEP*np.tan(THETA)
         self.FRONT_Z_MEAN = (self.FRONT_Z_MIN + self.FRONT_Z_MAX)/2
 
         #Back Legs are C and D
-        self.BACK_Z_MAX  = -1 * (np.tan(THETA)*(BETA + Y_STEP + CLEARANCE/np.tan(THETA)))
-        self.BACK_Z_MIN  = self.BACK_Z_MAX + Y_STEP*np.tan(THETA)
+        self.BACK_Z_MAX  = -1 * (np.tan(THETA)*(BETA + self.Y_STEP + CLEARANCE/np.tan(THETA)))
+        self.BACK_Z_MIN  = self.BACK_Z_MAX + self.Y_STEP*np.tan(THETA)
         self.BACK_Z_MEAN = (self.BACK_Z_MIN + self.BACK_Z_MAX)/2
 
 

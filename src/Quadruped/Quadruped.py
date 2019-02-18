@@ -83,8 +83,8 @@ class Quadruped:
         self.slope.currentYd = self.slope.currentYd - YShift
 
         # Write the Input Position to the Legs
-        self.Legs[A].setLegPos(self.slope.DEFAULT_X ,self.slope.currentYa ,self.slope.currentZa)
         self.Legs[B].setLegPos(self.slope.DEFAULT_X ,self.slope.currentYb  ,self.slope.currentZb)
+        self.Legs[A].setLegPos(self.slope.DEFAULT_X ,self.slope.currentYa ,self.slope.currentZa)
         self.Legs[C].setLegPos(self.slope.DEFAULT_X ,self.slope.currentYc ,self.slope.currentZc)
         self.Legs[D].setLegPos(self.slope.DEFAULT_X ,self.slope.currentYd  ,self.slope.currentZd)
 
@@ -312,40 +312,50 @@ class Quadruped:
                 self.slope.currentZc = BACK_Z_MIN
             
             else:
+                self.setSpeedAllLegs("SLOW")
+                # input("Press Any Key for STEP 1")
                 # Step 1 - Step Leg D Forward
+                self.Legs[B].StepInZ(self.slope.currentYb,self.slope.currentZb + 1)
                 self.Legs[D].StepInYZ(-BACK_Y_MAX,-BACK_Y_MIN,BACK_Z_MIN)
                 self.slope.currentYd = -BACK_Y_MIN
                 self.slope.currentZd = BACK_Z_MIN
+                self.Legs[B].StepInZ(self.slope.currentYb,self.slope.currentZb)
 
-                input("Press Any Key for STEP 2")
+                # input("Press Any Key for STEP 2")
                 # Step 2 - Step Leg A Forward
+                self.Legs[C].StepInZ(-self.slope.currentYc,self.slope.currentZc + 1)
                 self.Legs[A].StepInYZ(FRONT_Y_MIN,FRONT_Y_MAX,FRONT_Z_MAX)
                 self.slope.currentYa = FRONT_Y_MAX
                 self.slope.currentZa = FRONT_Z_MAX
+                self.Legs[C].StepInZ(-self.slope.currentYc,self.slope.currentZc)
 
-                input("Press Any Key for STEP 3")
+                # input("Press Any Key for STEP 3")
                 # Step 3 - Push Forward
-                self.setSpeedAllLegs("SLOW")
+                self.setSpeedAllLegs("SLOWER")
                 self.stanceBackwardSlope(self.slope.Y_STEP/2,self.slope.Z_STEP)
-                self.setSpeedAllLegs("NORMAL")
+                self.setSpeedAllLegs("SLOW")
 
-                input("Press Any Key for STEP 4")
+                # input("Press Any Key for STEP 4")
                 # Step 4 - Step Leg C Forward
+                self.Legs[A].StepInZ(self.slope.currentYa,self.slope.currentZa + 1)
                 self.Legs[C].StepInYZ(-BACK_Y_MAX,-BACK_Y_MIN,BACK_Z_MIN)
                 self.slope.currentYc = -BACK_Y_MIN
                 self.slope.currentZc = BACK_Z_MIN
+                self.Legs[A].StepInZ(self.slope.currentYa,self.slope.currentZa)
 
-                input("Press Any Key for STEP 5")
+                # input("Press Any Key for STEP 5")
                 # Step 5 - Step Leg B Forward
+                self.Legs[D].StepInZ(-self.slope.currentYd,self.slope.currentZd + 1)
                 self.Legs[B].StepInYZ(FRONT_Y_MIN,FRONT_Y_MAX,FRONT_Z_MAX)
                 self.slope.currentYb = FRONT_Y_MAX
                 self.slope.currentZb = FRONT_Z_MAX
+                self.Legs[D].StepInZ(-self.slope.currentYd,self.slope.currentZd)
 
-                input("Press Any Key for STEP 6")
+                # input("Press Any Key for STEP 6")
                 # Step 6 - Push Forward
-                self.setSpeedAllLegs("SLOW")
+                self.setSpeedAllLegs("SLOWER")
                 self.stanceBackwardSlope(self.slope.Y_STEP/2,self.slope.Z_STEP)
-                self.setSpeedAllLegs("NORMAL")
+                # self.setSpeedAllLegs("NORMAL")
 
 
     def walk(self,Mode,diffFactor=None):
@@ -370,8 +380,8 @@ class Leg:
         if (ID != None):
             self.setIDs(ID)
     
-        self.Z_STEP_UP_HEIGHT = -9  #$ -9
-        self.STEP_UP_DELAY = 0.4
+        self.Z_STEP_UP_HEIGHT = -10  #$ -9 For creep
+        self.STEP_UP_DELAY = 0.2
 
 
     def setIDs(self,ID):
@@ -426,45 +436,44 @@ class Leg:
         self.setLegPos(self.x,to_y,self.z)
         time.sleep(self.STEP_UP_DELAY)
 
-    def setSpeed(self,Mode):
-        if Mode == "SLOW":
-            SLOW_SPEED = 200
-            self.joints[TOP].setSpeed(SLOW_SPEED)
-            self.joints[MIDDLE].setSpeed(SLOW_SPEED)
-            self.joints[BOTTOM].setSpeed(SLOW_SPEED)
-        elif Mode == "NORMAL":
-            Normal_SPEED = 400
-            self.joints[TOP].setSpeed(Normal_SPEED)
-            self.joints[MIDDLE].setSpeed(Normal_SPEED)
-            self.joints[BOTTOM].setSpeed(Normal_SPEED)
-
     def StepInYZ(self,from_y,to_y,to_z):
         # input("Press Any Key:Leg Pickup")
         # Pickup the Leg
-        self.setLegPos(self.x,from_y,self.Z_STEP_UP_HEIGHT)
+        self.setLegPos(self.x + 3,from_y,self.Z_STEP_UP_HEIGHT)
         # self.joints[BOTTOM].writeAngle(20);
         
         time.sleep(self.STEP_UP_DELAY)
         # input("Press Any Key:Leg Rotate")
         # Rotate Top
-        self.setLegPos(self.x,to_y,self.Z_STEP_UP_HEIGHT)
+        self.setLegPos(self.x + 3,to_y,self.Z_STEP_UP_HEIGHT)
         # self.joints[BOTTOM].writeAngle(20);
         
-        self.y = to_y 
+        self.y = to_y
         time.sleep(self.STEP_UP_DELAY)
         # input("Press Any Key:Leg Drop")
         # Drop Down the Leg
         self.setLegPos(self.x,to_y,to_z)
         time.sleep(self.STEP_UP_DELAY)
 
+    def StepInZ(self,y,to_z):
+        self.setLegPos(self.x,y,to_z)
+        time.sleep(0.1)
+
+    def setSpeed(self,Mode):
+        if Mode == "SLOWER":   SPEED = 100
+        elif Mode == "SLOW":   SPEED = 150
+        elif Mode == "NORMAL": SPEED = 400
+
+        self.joints[TOP].setSpeed(SPEED)
+        self.joints[MIDDLE].setSpeed(SPEED)
+        self.joints[BOTTOM].setSpeed(SPEED)
 
 if __name__=="__main__":
     venom = Quadruped(servoId)
     venom.setParams(dirVector,FixedPoints)
     # venom.walk(TROT,-0.2)
-    venom.go2CreepStartPosition()
+    venom.go2SlopeStartPosition(2)
     input("Press Enter")
 
     while True:
-        #venom.Creep(False,1)
-        venom.Trot()
+        venom.Creep(True,2)
