@@ -1,6 +1,6 @@
-ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB3"
+ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB0"
 
-DXL_LIB_PATH = "/home/chinmay/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
+DXL_LIB_PATH = "/home/shanks/Downloads/Libraries/DynamixelSDK-master/c/build/linux64/libdxl_x64_c.so"
 
 
 ENABLE_DXL_MESSAGES = False
@@ -70,17 +70,17 @@ class Slope:
 
 
 # Servo Props
-servoId = [9,18,16,
-           7,2,3,
+servoId = [ 9,18,16,
+            7, 2, 3,
            12,13,17,
-           14,8,15]
+           14, 8,15]
 SERVO_RES = 0.2932551319648094
 
 #Set-Point of Each Servo
-FixedPoints = [516+153.45,512,512,
-               810-153.45,515,810,
-               512+153.45,512,515,
-               512-153.45,512,512]  
+FixedPoints = [516+153.45,512,508,
+               810-153.45,500,825,
+               512+153.45,512,502,
+               512-153.45,512,498]  
 # Direction of Motion
 dirVector = [-1,1,1, 
               1,-1,-1,
