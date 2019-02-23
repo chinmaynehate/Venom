@@ -7,7 +7,4 @@
 
 ####  By using a powerful tool like Robot Operating System, we can implement SLAM(Simultaneous Localization and Mapping) to generate a map of its surrounding area which can be sent to a web app or an android app. 
 
-## Android App
-
-<image src="https://i.imgur.com/CgPKo8q.jpg" />
 
