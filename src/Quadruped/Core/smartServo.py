@@ -21,6 +21,9 @@ def setSpeed(ID,Speed): #(0-1023)
 def writeRawAngle(ID,Angle): #( _ , 0-1023)
     return servos.write_pos(ID,Angle) 
 
+def storeRawAngle(group_id,ID,Angle):
+    return servos.store_value_single(group_id,ID,Angle)
+
 def writeAngle(Angle,Servo_Index):
     # servoId = k.servoId[Servo_Index]
     # RawAngle = toRawAngle(Angle,servoId)
@@ -59,6 +62,8 @@ class SmartServo:
             self.disable()
         elif ID!=None:
             self.enable()
+
+        self.group_id=None
         
 
     
@@ -66,6 +71,9 @@ class SmartServo:
         self.ID = ID
         self.setSpeed(self.Speed)
         self.enable()
+
+    def setGroup(self,group_id):
+        self.group_id = group_id
 
     def setParams(self,dirVector,fixedPoint):
         self.dirVector=dirVector
@@ -84,6 +92,13 @@ class SmartServo:
     def writeRawAngle(self,Angle): #( _ , 0-1023)
         return writeRawAngle(self.ID,Angle)
 
+    def storeRawAngle(self,Angle):
+        if self.group_id !=None:
+            return storeRawAngle(self.group_id,self.ID,Angle)
+        else:
+            print("Group is Not Defined for the Servo. Storing Value Failed")
+            quit()
+
     def writeAngle(self,Angle):
         RawAngle = int(round(toRawAngle(Angle,self.dirVector,self.fixedPoint)))
         #print("Writing Raw :",RawAngle)
@@ -92,6 +107,22 @@ class SmartServo:
         elif RawAngle<0:
             RawAngle=0
         return writeRawAngle(self.ID,RawAngle)
+
+    def storeAngle(self,Angle):
+        RawAngle = int(round(toRawAngle(Angle,self.dirVector,self.fixedPoint)))
+        #print("Writing Raw :",RawAngle)
+        if RawAngle>1023:
+            RawAngle=1023
+        elif RawAngle<0:
+            RawAngle=0
+
+        if self.group_id !=None:
+            return storeRawAngle(self.group_id,self.ID,RawAngle)
+        else:
+            print("Group is Not Defined for the Servo. Storing Value Failed")
+            quit()
+
+
 
     def readRawAngle(self):
         return readRawAngle(self.ID)
