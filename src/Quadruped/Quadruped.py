@@ -443,6 +443,11 @@ class Leg:
             
         else:
             print("Inverse Not Possible")
+    
+    def storeLegAngles(self,a0,a1,a2):
+        self.joints[TOP].storeRawAngle(a0)
+        self.joints[MIDDLE].storeRawAngle(a1)
+        self.joints[BOTTOM].storeRawAngle(a2)
 
 
     def StepInY(self,from_y,to_y):
@@ -505,11 +510,11 @@ class Leg:
 
 
 if __name__=="__main__":
-    venom = Quadruped(servoId)
-    venom.setParams(dirVector,FixedPoints)
-    # venom.walk(TROT,-0.2)
-    venom.go2SlopeStartPosition(2)
-    input("Press Enter")
-
-    while True:
-        venom.Creep(True,2)
+    servo.init()
+    ids = [8,15,9]
+    leg1 = Leg(ids)
+    leg1.setSpeed("SLOW")
+    input("Press Enter to Store")
+    leg1.storeLegAngles(700,400,200)
+    input("Press Enter to Sync Write")
+    leg1.go2StoredPositions()

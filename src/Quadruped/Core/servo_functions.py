@@ -72,6 +72,7 @@ dxl_present_speed    = 0
 dxl_present_load     = 0
 
 group_num = dynamixel.groupSyncWrite(port_num, PROTOCOL_VERSION, ADDR_MX_GOAL_POSITION, LEN_MX_GOAL_POSITION)
+
 def get_new_group():
     return dynamixel.groupSyncWrite(port_num, PROTOCOL_VERSION, ADDR_MX_GOAL_POSITION, LEN_MX_GOAL_POSITION)
 
@@ -280,29 +281,19 @@ def go2storedPosition(group_id):
     if dxl_comm_result != COMM_SUCCESS:
         print(dynamixel.getTxRxResult(PROTOCOL_VERSION, dxl_comm_result))
 
-if __name__ == '__main__':
-    # Open port
-    if dynamixel.openPort(port_num):
-        if constants.ENABLE_DXL_MESSAGES: 
-            print("[] Succeeded to open the port!")
-    else:
-        if constants.ENABLE_DXL_MESSAGES: 
-            print("[-] Failed to open the port!")
-        quit()
 
-    # Set port baudrate
-    if dynamixel.setBaudRate(port_num, BAUDRATE):
-        if constants.ENABLE_DXL_MESSAGES: 
-            print("[] Succeeded to change the baudrate!")
-    else:
-        if constants.ENABLE_DXL_MESSAGES: 
-            print("[-] Failed to change the baudrate!")
-        quit()
-    try:
-        pass
+if __name__=="__main__":
+    enable_port()
+    enable_bot(8)
+    enable_bot(15)
+    enable_bot(9)
+    store_value_single(group_num,8,500)
+    store_value_single(group_num,15,700)
+    store_value_single(group_num,9,600)
+    # print("pos:",read_pos(8,1))
+    input("Enter Any Key to Go2Position")
+    write()
+    # write_pos(8,800)
+    
 
-    except KeyboardInterrupt:
-        if constants.ENABLE_DXL_MESSAGES: 
-            print("\n[] Disabling")
-        # Close port
-    dynamixel.closePort(port_num)
+    
