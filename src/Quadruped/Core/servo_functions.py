@@ -72,6 +72,8 @@ dxl_present_speed    = 0
 dxl_present_load     = 0
 
 group_num = dynamixel.groupSyncWrite(port_num, PROTOCOL_VERSION, ADDR_MX_GOAL_POSITION, LEN_MX_GOAL_POSITION)
+def get_new_group():
+    return dynamixel.groupSyncWrite(port_num, PROTOCOL_VERSION, ADDR_MX_GOAL_POSITION, LEN_MX_GOAL_POSITION)
 
 
 def enable_port():
@@ -254,8 +256,25 @@ def store_value(DXL1_ID,DXL2_ID,DXL3_ID,DXL4_ID,DXL5_ID,dxl_goal_position1,dxl_g
         print("[ID:%03d] groupSyncWrite addparam failed" % (DXL4_ID))
 
 
+def store_value_single(group_id,DXL_ID,goal_position):
+    # Add Dynamixel#1 goal position value to the Syncwrite storage
+    dxl_addparam_result = ctypes.c_ubyte(dynamixel.groupSyncWriteAddParam(group_id, DXL_ID, goal_position, LEN_MX_GOAL_POSITION)).value
+    print(dxl_addparam_result)
+    if dxl_addparam_result != 1:
+        print(dxl_addparam_result)
+        print("[ID:%03d] groupSyncWrite addparam failed" % (DXL_ID))
+        quit()
+
+
 def write():
     dynamixel.groupSyncWriteTxPacket(group_num)
+    dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)
+    print(dxl_comm_result)
+    if dxl_comm_result != COMM_SUCCESS:
+        print(dynamixel.getTxRxResult(PROTOCOL_VERSION, dxl_comm_result))
+
+def go2storedPosition(group_id):
+    dynamixel.groupSyncWriteTxPacket(group_id)
     dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)
     print(dxl_comm_result)
     if dxl_comm_result != COMM_SUCCESS:
