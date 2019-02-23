@@ -9,6 +9,7 @@ import time
 import math
 from helpers import *
 import cdynamixel as dynamixel
+import interpolation as ip
 
 class Quadruped:
     def __init__(self,servoIndexes=None):
@@ -429,10 +430,9 @@ class Leg:
             print("Inverse Not Possible")
         
     def storeLegPos(self,x,y,z):
-        # t1,t2,t3,isPossible = ik.getInverse(x,y,z)
+        t1,t2,t3,isPossible = ik.getInverse(x,y,z)
 
-        # if isPossible:
-        if True:
+        if isPossible:
             # Store the Current Value of X,Y,Z
             if self.doOnce:
                 self.doOnce=False
@@ -443,21 +443,13 @@ class Leg:
                 self.prevAngle2 = 0
                 self.prevAngle3 = 0
 
-            # self.joints[TOP].storeAngle(t1)
-            # self.joints[MIDDLE].storeAngle(t2)
-            # self.joints[BOTTOM].storeAngle(t3)
+            self.joints[TOP].storeAngle(t1)
+            self.joints[MIDDLE].storeAngle(t2)
+            self.joints[BOTTOM].storeAngle(t3)
 
-            # angle1 = t1
-            # angle2 = t2
-            # angle3 = t3
-            
-            self.joints[TOP].storeAngle(x)
-            self.joints[MIDDLE].storeAngle(y)
-            self.joints[BOTTOM].storeAngle(z)
-
-            angle1 = x
-            angle2 = y
-            angle3 = z
+            angle1 = t1
+            angle2 = t2
+            angle3 = t3
 
             diff1 = abs(float(self.prevAngle1) - float(angle1))
             diff2 = abs(float(self.prevAngle2) - float(angle2))
@@ -473,9 +465,9 @@ class Leg:
                 self.joints[MIDDLE].setSpeed(v2)
                 self.joints[BOTTOM].setSpeed(v3)
 
-                print("Diffs : ",diff1,diff2,diff3)
-                print("setSpeeds : ",v1,v2,v3)
-                print("Ratios : ",diff1/v1, diff2/v2, diff3/v3)
+                # print("Diffs : ",diff1,diff2,diff3)
+                # print("setSpeeds : ",v1,v2,v3)
+                # print("Ratios : ",diff1/v1, diff2/v2, diff3/v3)
 
             self.prevAngle1 = angle1
             self.prevAngle2 = angle2
@@ -552,10 +544,21 @@ if __name__=="__main__":
     ids = [14, 8,15]
     leg1 = Leg(ids)
     leg1.setParams(dirVector,FixedPoints)
-    while 1:
-        angle1 = input("Enter Angle 1 : ")
-        angle2 = input("Enter Angle 2 : ")
-        angle3 = input("Enter Angle 3 : ")
-        leg1.storeLegPos(angle1,angle2,angle3)
+    leg1.storeLegPos(8,7,-16)
+    input("Press ENter to Begin Motion")
+    
+    start = time.time()
+    current = time.time()-start
+
+    while (current) <= (ip.Final_time-ip.Iniital_time):
+        current = time.time()-start 
+        print("Calculating for :",current)
+        config= ip.getConfigAt(current)
+        x,y,z=config
+        print("Going to :",config)
+        
+        leg1.storeLegPos(x,y,z)
         leg1.go2StoredPositions()
         leg1.clearParam()
+
+        time.sleep(0.005)
