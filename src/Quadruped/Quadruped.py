@@ -383,12 +383,22 @@ class Leg:
         self.Z_STEP_UP_HEIGHT = -10  #$ -9 For creep
         self.STEP_UP_DELAY = 0.2
 
+        self.groupID = servo.createNewGroup()
+        # Assign Group Id to each servos
+        self.setGroup(self.groupID)
 
     def setIDs(self,ID):
         self.joints[TOP].setID(ID[TOP])
         self.joints[MIDDLE].setID(ID[MIDDLE])
         self.joints[BOTTOM].setID(ID[BOTTOM])
 
+    def setGroup(self,groupID=None):
+        if groupID!=None:
+            for legServo in self.joints:
+                legServo.setGroup(groupID)
+        else:
+            print("Group Not Defined")
+            quit()
     
     def setParams(self,dirParams,fixedPointParams):
         self.joints[TOP].setParams(dirParams[TOP],fixedPointParams[TOP])
@@ -416,6 +426,24 @@ class Leg:
         else:
             print("Inverse Not Possible")
         
+    def storeLegPos(self,x,y,z):
+        t1,t2,t3,isPossible = ik.getInverse(x,y,z)
+
+        if isPossible:
+            # Store the Current Value of X,Y,Z
+            if self.doOnce:
+                self.doOnce=False
+                self.x = x
+                self.y = y
+                self.z = z
+
+            self.joints[TOP].storeAngle(t1)
+            self.joints[MIDDLE].storeAngle(t2)
+            self.joints[BOTTOM].storeAngle(t3)
+            
+        else:
+            print("Inverse Not Possible")
+
 
     def StepInY(self,from_y,to_y):
         # input("Press Any Key:Leg Pickup")
@@ -467,6 +495,14 @@ class Leg:
         self.joints[TOP].setSpeed(SPEED)
         self.joints[MIDDLE].setSpeed(SPEED)
         self.joints[BOTTOM].setSpeed(SPEED)
+    
+    def go2StoredPositions(self):
+        if self.groupID!=None:
+            servo.go2StoredPositions(self.groupID)
+        else:
+            print("Group Not Defined")
+            quit()
+
 
 if __name__=="__main__":
     venom = Quadruped(servoId)

@@ -44,7 +44,11 @@ def toStandardAngle(angle,dirVector,fixedPoint):
 def toRawAngle(angle,dirVector,fixedPoint):
     return (angle) * 1/k.SERVO_RES * 1/dirVector + fixedPoint 
 
+def createNewGroup():
+    return servos.get_new_group()
 
+def go2StoredPositions(groupID):
+    return servos.go2storedPosition(groupID)
 # Servo Object 
 class SmartServo:
 
