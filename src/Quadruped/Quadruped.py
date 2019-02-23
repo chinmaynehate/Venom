@@ -7,6 +7,8 @@ import smartServo as servo
 import kinematics as ik
 import time
 import math
+from helpers import *
+import cdynamixel as dynamixel
 
 class Quadruped:
     def __init__(self,servoIndexes=None):
@@ -427,28 +429,60 @@ class Leg:
             print("Inverse Not Possible")
         
     def storeLegPos(self,x,y,z):
-        t1,t2,t3,isPossible = ik.getInverse(x,y,z)
+        # t1,t2,t3,isPossible = ik.getInverse(x,y,z)
 
-        if isPossible:
+        # if isPossible:
+        if True:
             # Store the Current Value of X,Y,Z
             if self.doOnce:
                 self.doOnce=False
                 self.x = x
                 self.y = y
                 self.z = z
+                self.prevAngle1 = 0
+                self.prevAngle2 = 0
+                self.prevAngle3 = 0
 
-            self.joints[TOP].storeAngle(t1)
-            self.joints[MIDDLE].storeAngle(t2)
-            self.joints[BOTTOM].storeAngle(t3)
+            # self.joints[TOP].storeAngle(t1)
+            # self.joints[MIDDLE].storeAngle(t2)
+            # self.joints[BOTTOM].storeAngle(t3)
+
+            # angle1 = t1
+            # angle2 = t2
+            # angle3 = t3
             
+            self.joints[TOP].storeAngle(x)
+            self.joints[MIDDLE].storeAngle(y)
+            self.joints[BOTTOM].storeAngle(z)
+
+            angle1 = x
+            angle2 = y
+            angle3 = z
+
+            diff1 = abs(float(self.prevAngle1) - float(angle1))
+            diff2 = abs(float(self.prevAngle2) - float(angle2))
+            diff3 = abs(float(self.prevAngle3) - float(angle3))
+            diffSum = diff1 + diff2 + diff3
+
+            if diffSum != 0:
+                v1 = int(cmap(diff1/diffSum, 0, 1, 0, 500))
+                v2 = int(cmap(diff2/diffSum, 0, 1, 0, 500))
+                v3 = int(cmap(diff3/diffSum, 0, 1, 0, 500))
+
+                self.joints[TOP].setSpeed(v1)
+                self.joints[MIDDLE].setSpeed(v2)
+                self.joints[BOTTOM].setSpeed(v3)
+
+                print("Diffs : ",diff1,diff2,diff3)
+                print("setSpeeds : ",v1,v2,v3)
+                print("Ratios : ",diff1/v1, diff2/v2, diff3/v3)
+
+            self.prevAngle1 = angle1
+            self.prevAngle2 = angle2
+            self.prevAngle3 = angle3
+
         else:
             print("Inverse Not Possible")
-    
-    def storeLegAngles(self,a0,a1,a2):
-        self.joints[TOP].storeRawAngle(a0)
-        self.joints[MIDDLE].storeRawAngle(a1)
-        self.joints[BOTTOM].storeRawAngle(a2)
-
 
     def StepInY(self,from_y,to_y):
         # input("Press Any Key:Leg Pickup")
@@ -472,13 +506,13 @@ class Leg:
     def StepInYZ(self,from_y,to_y,to_z):
         # input("Press Any Key:Leg Pickup")
         # Pickup the Leg
-        self.setLegPos(self.x + 3,from_y,self.Z_STEP_UP_HEIGHT)
+        self.setLegPos(self.x,from_y,self.Z_STEP_UP_HEIGHT)
         # self.joints[BOTTOM].writeAngle(20);
         
         time.sleep(self.STEP_UP_DELAY)
         # input("Press Any Key:Leg Rotate")
         # Rotate Top
-        self.setLegPos(self.x + 3,to_y,self.Z_STEP_UP_HEIGHT)
+        self.setLegPos(self.x,to_y,self.Z_STEP_UP_HEIGHT)
         # self.joints[BOTTOM].writeAngle(20);
         
         self.y = to_y
@@ -499,7 +533,7 @@ class Leg:
 
         self.joints[TOP].setSpeed(SPEED)
         self.joints[MIDDLE].setSpeed(SPEED)
-        self.joints[BOTTOM].setSpeed(SPEED)
+        self.joints[BOTTOM].setSpseed(SPEED)
     
     def go2StoredPositions(self):
         if self.groupID!=None:
@@ -508,13 +542,20 @@ class Leg:
             print("Group Not Defined")
             quit()
 
+    def clearParam(self):
+        dynamixel.groupSyncWriteClearParam(self.groupID)
+
 
 if __name__=="__main__":
-    servo.init()
-    ids = [8,15,9]
+    venom = Quadruped()
+    venom.setParams(dirVector,FixedPoints)
+    ids = [14, 8,15]
     leg1 = Leg(ids)
-    leg1.setSpeed("SLOW")
-    input("Press Enter to Store")
-    leg1.storeLegAngles(700,400,200)
-    input("Press Enter to Sync Write")
-    leg1.go2StoredPositions()
+    leg1.setParams(dirVector,FixedPoints)
+    while 1:
+        angle1 = input("Enter Angle 1 : ")
+        angle2 = input("Enter Angle 2 : ")
+        angle3 = input("Enter Angle 3 : ")
+        leg1.storeLegPos(angle1,angle2,angle3)
+        leg1.go2StoredPositions()
+        leg1.clearParam()
