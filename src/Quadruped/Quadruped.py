@@ -539,12 +539,17 @@ class Leg:
 
 
 if __name__=="__main__":
-    venom = Quadruped()
-    venom.setParams(dirVector,FixedPoints)
     ids = [14, 8,15]
+    fixPts = [512-153.45,512,498]
+    dirVect = [-1,-1,1]
+    venom = Quadruped()
     leg1 = Leg(ids)
-    leg1.setParams(dirVector,FixedPoints)
+    leg1.setParams(dirVect,fixPts)
+    
     leg1.storeLegPos(8,7,-16)
+    leg1.go2StoredPositions()
+    leg1.clearParam()   
+    
     input("Press ENter to Begin Motion")
     
     start = time.time()
