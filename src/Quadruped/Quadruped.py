@@ -410,6 +410,15 @@ class Leg:
         self.doOnce = True
         
         
+    def storeAngles(self,config):
+        self.joints[TOP].storeAngle(config[0])
+        self.joints[MIDDLE].storeAngle(config[1])
+        self.joints[BOTTOM].storeAngle(config[2])
+
+    def setVel(self,v1,v2,v3):
+        self.joints[TOP].setSpeed(v1)
+        self.joints[MIDDLE].setSpeed(v2)
+        self.joints[BOTTOM].setSpeed(v3)
 
     def setLegPos(self,x,y,z):
         t1,t2,t3,isPossible = ik.getInverse(x,y,z)
@@ -555,14 +564,20 @@ if __name__=="__main__":
     start = time.time()
     current = time.time()-start
 
-    while (current) <= (ip.Final_time-ip.Iniital_time):
-        current = time.time()-start 
-        print("Calculating for :",current)
-        config= ip.getConfigAt(current)
-        x,y,z=config
-        print("Going to :",config)
+    velocityMapConst = 0.01162
+
+    while (current) <= (ip.Final_time-ip.Initial_time):
+        current = time.time()-start
         
-        leg1.storeLegPos(x,y,z)
+        config = ip.getInterpolate1d(current)
+        vel = ip.CalculateJointVelocities(config,current)
+        vel = [vel[0]/velocityMapConst,vel[1]/velocityMapConst,vel[2]/velocityMapConst]
+        print("config : ",config[0],config[1],config[2])
+        print("vel : ",vel[0],vel[1],vel[2])
+        print(".....")
+        
+        leg1.setVel(vel[0],vel[1],vel[2])
+        leg1.storeAngles(config)
         leg1.go2StoredPositions()
         leg1.clearParam()
 
