@@ -113,7 +113,7 @@ class SmartServo:
 
     def storeAngle(self,Angle):
         RawAngle = int(round(toRawAngle(Angle,self.dirVector,self.fixedPoint)))
-        print("Stroring Raw Angle:",RawAngle)
+        # print("Stroring Raw Angle:",RawAngle)
         if RawAngle>1023:
             RawAngle=1023
         elif RawAngle<0:

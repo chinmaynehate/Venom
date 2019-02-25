@@ -4,6 +4,8 @@ import kinematics as ik
 import constants as k
 from numpy.linalg import inv
 
+velocityMapConst = 0.01162
+
 # x,y,z,yaw,pitch,roll
 Intitial_config = np.array([8,7,-16,0,0,0])
 Final_config = np.array([8,-4,-16,0,0,0])
@@ -119,10 +121,19 @@ def CalculateJointVelocities(instant,timeElapsed):
     ToolVelocity = np.transpose(np.matrix(getVelocity(timeElapsed)))
     # print("Tool Velocity:",ToolVelocity)
     # print("\nToolVelocity = \n", ToolVelocity)
-    JointSpaceVelocities = JI * ToolVelocity
-    # print("\nJointVelocities = \n",JointSpaceVelocities)
-
-    return JointSpaceVelocities
+    JointVel = JI * ToolVelocity
+    # print("\nJointVelocities = \n",JointVel)
+    
+    JointVel = JointVel / velocityMapConst
+    JointVel[0],JointVel[1],JointVel[2] = abs(JointVel[0]),abs(JointVel[1]),abs(JointVel[2])
+    for x in range(0,3):
+            if JointVel[x] == 0:
+                JointVel[x] = 1
+    JointVel0 = int(JointVel[0])
+    JointVel1 = int(JointVel[1])
+    JointVel2 = int(JointVel[2])
+    
+    return JointVel0, JointVel1, JointVel2
 
 
 if __name__ == "__main__":
