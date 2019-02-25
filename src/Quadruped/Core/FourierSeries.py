@@ -1,4 +1,4 @@
-from sympy import fourier_series,symbols,Piecewise
+from sympy import fourier_series,symbols,Piecewise,lambdify
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -25,14 +25,19 @@ def constructTrajectory_FourierSeries():
     FourierX = Piecewise( (fx1,t_current<=dc+dt) ,  (fx2 ,t_current<=T-dt ) , (fx3 , t_current<=1)   )
 
     FourierXSeries = fourier_series( FourierX , (t_current,0,1)  )
-    print("FourierX Series : ", FourierXSeries)
+    print("FourierX Series Calculated: ")
 
+    lam = lambdify(t_current,FourierXSeries)
+    print("Lmdify Done")
     lp = np.array(range( 0 , 100))
     for i in lp:
-        current = FourierXSeries.subs(t_current,i/10)
-        plt.scatter( i/10 , current )
 
-    plt.show()
+        # current = FourierXSeries.subs(t_current,i/10)
+        current = lam(i/10)
+        # plt.scatter( i/10 , current )
+        print("at Input:",i," ,rESULT = ",current)
+
+    # plt.show()
 
     '''
     print("calculating Fourier1")
