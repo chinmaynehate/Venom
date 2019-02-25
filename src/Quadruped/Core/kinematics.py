@@ -5,10 +5,10 @@ import constants as k
 import math
 
 def getInverse(x,y,z):
-    l1 = k.linkLength[0]
-    l01= k.linkLength[1]
-    l2 = k.linkLength[2]
-    l3 = k.linkLength[3]
+    l1 = k.linkLength[0]    #5.5
+    l01= k.linkLength[1]    #0
+    l2 = k.linkLength[2]    #~
+    l3 = k.linkLength[3]    #~
 
     r1 = l01
     r2 = l2 

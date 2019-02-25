@@ -5,11 +5,11 @@ import constants as k
 from numpy.linalg import inv
 
 # x,y,z,yaw,pitch,roll
-Intitial_config = np.array([8,7,-16])
-Final_config = np.array([8,-4,-16])
+Intitial_config = np.array([8,7,-16,0,0,0])
+Final_config = np.array([8,-4,-16,0,0,0])
 
-Intitial_config = np.array([0,0,0,0,0,0])
-Final_config = np.array([10,0,0,0,0,0])
+# Intitial_config = np.array([0,0,0,0,0,0])
+# Final_config = np.array([10,0,0,0,0,0])
 
 # Intitial_config = np.array([-np.pi,0,0,0,0,0])
 # Final_config = np.array([np.pi,0,0,0,0,0])
@@ -67,24 +67,40 @@ def getConfigAt(t):
 
 def getVelocity(t):
     res = 3 * A * t**2 + 2 * B*t + C
-    return res*0.001
+    return res/100              
 
 def getAcc(t):
     res = 6 * A*t + 2*B
     return res
 
-def CalculateJInv(x,y,z):
+# x,y,z target cordinates
+def CalculateJacobianInv(xInstant,yInstant,zInstant):
 
-    t1,t2,t3,isPossible = ik.getInverse(x,y,z)
-    a1 = k.linkLength[1]
-    a2 = k.linkLength[2]
-    a3 = k.linkLength[3]
-    s1 = np.sin(t1)
-    c1 = np.cos(t1)
-    s2 = np.sin(t2)
-    c2 = np.cos(t2)
-    s23 = np.sin(t2+t3)
-    c23 = np.cos(t2+t3)
+    t1,t2,t3,isPossible = ik.getInverse(xInstant,yInstant,zInstant)
+    if not isPossible:
+        print("Inverse not possible")
+        return None,False
+
+    l1 = k.linkLength[0]    #5.5
+    l01= k.linkLength[1]    #0
+    l2 = k.linkLength[2]    #~
+    l3 = k.linkLength[3]    #~
+
+    r1 = l01
+    r2 = l2 
+    r3 = l3
+
+    a1=r1
+    a2=r2
+    a3 = r3
+
+
+    s1 = np.sin(t1*np.pi/180)
+    c1 = np.cos(t1*np.pi/180)
+    s2 = np.sin(t2*np.pi/180)
+    c2 = np.cos(t2*np.pi/180)
+    s23 = np.sin((t2+t3)*np.pi/180)
+    c23 = np.cos((t2+t3)*np.pi/180)
 
     J = np.matrix([ [ (-s1*(a3*c23 + a2*c2 + a1)) , (-c1*(a3*s23 + a2*s2)) , (-a3*c1*s23)],
                     [ (c1*(a3*c23 + a2*c2 + a1)) ,  (-s1*(a3*s23 + a2*s2)) , (-a3*s1*s23)],
@@ -93,7 +109,7 @@ def CalculateJInv(x,y,z):
                     [ (c1*c23) ,                    (-s1*s23) ,              (-s1*s23)],
                     [ 0,                            c23 ,                    c23]])
 
-    # print("\nJ = \n", J)
+    # print("\nJnormal = \n", J)
 
     JT = np.transpose(J)
     # print("\nJT = \n", JT)
@@ -101,20 +117,24 @@ def CalculateJInv(x,y,z):
     # print("\nJT*J = \n", JTJ)
     JI = inv(JTJ) * JT
     # print("\nJI = \n", JI)
-    return JI
+    return JI,True
 
-def CalculateJSV(x,y,z,t):
-    JI = CalculateJInv(x,y,z)
-    # print("\nJT = \n", JI)
-    ToolVelocity = np.transpose(np.matrix(getVelocity(t)))
+def CalculateJointVelocities(xInstant,yInstant,zInstant,timeElapsed):
+    JI,isPossible = CalculateJacobianInv(xInstant,yInstant,zInstant)    # print("\nJInverse = \n", JI)
+    if isPossible==False:
+        print("Inverse Not Possible , Cant Calculate Joint Velocities")
+        return None,False
+    ToolVelocity = np.transpose(np.matrix(getVelocity(timeElapsed)))
+    # print("Tool Velocity:",ToolVelocity)
     # print("\nToolVelocity = \n", ToolVelocity)
     JointSpaceVelocities = JI * ToolVelocity
-    print("\nJointSpaceVelocities = \n",JointSpaceVelocities)
-    # return JointSpaceVelocities
+    print("\nJointVelocities = \n",JointSpaceVelocities)
+
+    return JointSpaceVelocities,True
 
 
 if __name__ == "__main__":
-    # import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt
     # from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
 
     
@@ -122,9 +142,9 @@ if __name__ == "__main__":
 
     times = [0,2]
     position = [0,10]
-    velocities = [0,0]
+    velocities = [0,5]
 
-    # setInterpolate1d(position,velocities,times)
+    setInterpolate1d(position,velocities,times)
 
     Xs = []
     Ys=[]
@@ -138,23 +158,28 @@ if __name__ == "__main__":
     current = time.time()
     
     while (time.time()-start <= ( Final_time-Iniital_time)):
-        # config = getInterpolate1d( time.time()-start)
-        # Xs.append(config)
-        # Ys.append(patFun(config))
+        config = getInterpolate1d( time.time()-start)
+        Xs.append(config)
+        Ys.append(pathFun(config))
         # ax.scatter(1,1,1)
-        config= getConfigAt(time.time()-start)
-        x,y,z=config
+        # config= getConfigAt(time.time()-start)
+        # x,y,z=config
+        # Xs.append(x)
+        # Ys.append(y)
+        # time.sleep(0.1)
+        # print("Calculating at time:",time.time()-start)
+        # print("\nconfig = \n", config)
+        # CalculateJointVelocities(x,y,z,time.time()-start)
         time.sleep(0.1)
-        print("Calculating at time:",time.time()-start)
-        print("\nconfig = \n", config)
-        CalculateJSV(x,y,z,time.time()-start)
     
+
+    # CalculateJSV(8,0,0,0.1)
     # fig = plt.figure()
     
-    # plt.scatter(Xs,Ys)
+    plt.scatter(Xs,Ys)
     # ax = fig.add_subplot(111, projection='3d')
     # # plt.ylabel("Time")
-    # plt.show()
+    plt.show()
 
 
 
