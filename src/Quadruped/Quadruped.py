@@ -568,17 +568,15 @@ if __name__=="__main__":
 
     while (current) <= (ip.Final_time-ip.Initial_time):
         current = time.time()-start
-        
         config = ip.getInterpolate1d(current)
-        vel = ip.CalculateJointVelocities(config,current)
-        vel = [vel[0]/velocityMapConst,vel[1]/velocityMapConst,vel[2]/velocityMapConst]
-        print("config : ",config[0],config[1],config[2])
-        print("vel : ",vel[0],vel[1],vel[2])
-        print(".....")
-        
-        leg1.setVel(vel[0],vel[1],vel[2])
-        leg1.storeAngles(config)
+        JointVel0, JointVel1, JointVel2 = ip.CalculateJointVelocities(config,current)
+        # print("config : ",config[0],config[1],config[2])
+        # print("vel : ",JointVel0, JointVel1, JointVel2)
+        # print(".....")
+
+        # leg1.setVel(JointVel0, JointVel1, JointVel2)
+        leg1.storeLegPos(config[0],config[1],config[2])
         leg1.go2StoredPositions()
         leg1.clearParam()
 
-        time.sleep(0.005)
+        # time.sleep(0.1)

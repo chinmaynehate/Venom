@@ -260,7 +260,7 @@ def store_value(DXL1_ID,DXL2_ID,DXL3_ID,DXL4_ID,DXL5_ID,dxl_goal_position1,dxl_g
 def store_value_single(group_id,DXL_ID,goal_position):
     # Add Dynamixel#1 goal position value to the Syncwrite storage
     dxl_addparam_result = ctypes.c_ubyte(dynamixel.groupSyncWriteAddParam(group_id, DXL_ID, goal_position, LEN_MX_GOAL_POSITION)).value
-    print(dxl_addparam_result)
+    # print(dxl_addparam_result)
     if dxl_addparam_result != 1:
         print(dxl_addparam_result)
         print("[ID:%03d] groupSyncWrite addparam failed" % (DXL_ID))
