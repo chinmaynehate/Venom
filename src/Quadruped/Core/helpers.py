@@ -1,4 +1,4 @@
-from sympy import *
+# from sympy import *
 
 def cmap(value,inputLow,inputHigh,outputLow,outputHigh,constrain=False):
     mappedValue = (value - inputLow) * (outputHigh-outputLow)/(inputHigh-inputLow) + outputLow

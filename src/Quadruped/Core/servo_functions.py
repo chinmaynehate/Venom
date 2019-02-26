@@ -276,10 +276,10 @@ def write():
 
 def go2storedPosition(group_id):
     dynamixel.groupSyncWriteTxPacket(group_id)
-    dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)
-    print(dxl_comm_result)
-    if dxl_comm_result != COMM_SUCCESS:
-        print(dynamixel.getTxRxResult(PROTOCOL_VERSION, dxl_comm_result))
+    # dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)
+    # print(dxl_comm_result)
+    # if dxl_comm_result != COMM_SUCCESS:
+    #     print(dynamixel.getTxRxResult(PROTOCOL_VERSION, dxl_comm_result))
 
 
 if __name__=="__main__":

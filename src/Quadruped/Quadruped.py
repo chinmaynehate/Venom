@@ -408,17 +408,29 @@ class Leg:
         self.joints[MIDDLE].setParams(dirParams[MIDDLE],fixedPointParams[MIDDLE])
         self.joints[BOTTOM].setParams(dirParams[BOTTOM],fixedPointParams[BOTTOM])
         self.doOnce = True
-        
-        
-    def storeAngles(self,config):
-        self.joints[TOP].storeAngle(config[0])
-        self.joints[MIDDLE].storeAngle(config[1])
-        self.joints[BOTTOM].storeAngle(config[2])
 
     def setVel(self,v1,v2,v3):
         self.joints[TOP].setSpeed(v1)
         self.joints[MIDDLE].setSpeed(v2)
         self.joints[BOTTOM].setSpeed(v3)
+
+    def storeLegPos(self,x,y,z):
+        t1,t2,t3,isPossible = ik.getInverse(x,y,z)
+
+        if isPossible:
+            # Store the Current Value of X,Y,Z
+            if self.doOnce:
+                self.doOnce=False
+                self.x = x
+                self.y = y
+                self.z = z
+
+            self.joints[TOP].storeAngle(t1)
+            self.joints[MIDDLE].storeAngle(t2)
+            self.joints[BOTTOM].storeAngle(t3)
+            
+        else:
+            print("Inverse Not Possible")
 
     def setLegPos(self,x,y,z):
         t1,t2,t3,isPossible = ik.getInverse(x,y,z)
@@ -438,7 +450,7 @@ class Leg:
         else:
             print("Inverse Not Possible")
         
-    def storeLegPos(self,x,y,z):
+    def storeLegPosWithSetSpeeds(self,x,y,z):
         t1,t2,t3,isPossible = ik.getInverse(x,y,z)
 
         if isPossible:
@@ -555,18 +567,23 @@ if __name__=="__main__":
     leg1 = Leg(ids)
     leg1.setParams(dirVect,fixPts)
     
+    leg1.setVel(300,300,300)
     leg1.storeLegPos(8,7,-16)
     leg1.go2StoredPositions()
     leg1.clearParam()   
     
-    input("Press ENter to Begin Motion")
+    input("Press Enter to Begin Motion")
     
     start = time.time()
     current = time.time()-start
 
     velocityMapConst = 0.01162
 
+    step = 0
+
     while (current) <= (ip.Final_time-ip.Initial_time):
+        step += 1
+
         current = time.time()-start
         config = ip.getInterpolate1d(current)
         JointVel0, JointVel1, JointVel2 = ip.CalculateJointVelocities(config,current)
@@ -580,3 +597,4 @@ if __name__=="__main__":
         leg1.clearParam()
 
         # time.sleep(0.1)
+    print("steps : ",step)
