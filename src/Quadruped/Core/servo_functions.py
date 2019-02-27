@@ -3,6 +3,7 @@ sys.path.insert(0, "..")
 
 import os,ctypes
 import constants
+import time
 
 if os.name == 'nt':
     import msvcrt
@@ -124,7 +125,6 @@ def enable_bot(ID):
 
 
 def write_pos(ID, final_pos):
-
     # Write goal position
     dynamixel.write2ByteTxRx(port_num, PROTOCOL_VERSION, ID, ADDR_MX_GOAL_POSITION, final_pos)
     dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)
@@ -159,14 +159,14 @@ def read_pos(ID,prnt_enable):
 def set_speed(ID,speed):
     #Write goal speed
     dynamixel.write2ByteTxRx(port_num, PROTOCOL_VERSION, ID, ADDR_MX_GOAL_SPEED, speed)
-    dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)
-    dxl_error = dynamixel.getLastRxPacketError(port_num, PROTOCOL_VERSION)
-    if dxl_comm_result != COMM_SUCCESS:
-        if constants.ENABLE_DXL_MESSAGES: 
-            print(dynamixel.getTxRxResult(PROTOCOL_VERSION, dxl_comm_result))
-    elif dxl_error != 0:
-        if constants.ENABLE_DXL_MESSAGES: 
-            print(dynamixel.getRxPacketError(PROTOCOL_VERSION, dxl_error))
+    # dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)
+    # dxl_error = dynamixel.getLastRxPacketError(port_num, PROTOCOL_VERSION)
+    # if dxl_comm_result != COMM_SUCCESS:
+    #     if constants.ENABLE_DXL_MESSAGES: 
+    #         print(dynamixel.getTxRxResult(PROTOCOL_VERSION, dxl_comm_result))
+    # elif dxl_error != 0:
+    #     if constants.ENABLE_DXL_MESSAGES: 
+    #         print(dynamixel.getRxPacketError(PROTOCOL_VERSION, dxl_error))
 
 def read_speed(ID,prnt_enable):
     #Read present speed
@@ -280,7 +280,6 @@ def go2storedPosition(group_id):
     # print(dxl_comm_result)
     # if dxl_comm_result != COMM_SUCCESS:
     #     print(dynamixel.getTxRxResult(PROTOCOL_VERSION, dxl_comm_result))
-
 
 if __name__=="__main__":
     enable_port()

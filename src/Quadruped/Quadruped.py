@@ -62,10 +62,15 @@ class Quadruped:
         
         
         # Write the Input Position to the Legs
-        self.Legs[A].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYa ,self.creep.DEFAULT_Z)
-        self.Legs[B].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYb  ,self.creep.DEFAULT_Z)
-        self.Legs[C].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYc ,self.creep.DEFAULT_Z)
-        self.Legs[D].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYd  ,self.creep.DEFAULT_Z)
+        # self.Legs[A].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYa ,self.creep.DEFAULT_Z)
+        # self.Legs[B].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYb  ,self.creep.DEFAULT_Z)
+        # self.Legs[C].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYc ,self.creep.DEFAULT_Z)
+        # self.Legs[D].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYd  ,self.creep.DEFAULT_Z)
+
+        self.Legs[A].storeLegPos(self.creep.DEFAULT_X ,self.creep.currentYa ,self.creep.DEFAULT_Z)
+        self.Legs[B].storeLegPos(self.creep.DEFAULT_X ,self.creep.currentYb  ,self.creep.DEFAULT_Z)
+        self.Legs[C].storeLegPos(self.creep.DEFAULT_X ,self.creep.currentYc ,self.creep.DEFAULT_Z)
+        self.Legs[D].storeLegPos(self.creep.DEFAULT_X ,self.creep.currentYd  ,self.creep.DEFAULT_Z)
 
     def setSpeedAllLegs(self,Mode):
         self.Legs[A].setSpeed(Mode)
@@ -95,11 +100,15 @@ class Quadruped:
     def go2CreepStartPosition(self):
         # Starting Position for Creep Position
         
-        self.Legs[A].setLegPos(self.creep.DEFAULT_X, self.creep.Y_MEAN,self.creep.DEFAULT_Z)
-        self.Legs[B].setLegPos(self.creep.DEFAULT_X, self.creep.Y_MIN,self.creep.DEFAULT_Z)
-        self.Legs[C].setLegPos(self.creep.DEFAULT_X,-self.creep.Y_MIN,self.creep.DEFAULT_Z)
-        self.Legs[D].setLegPos(self.creep.DEFAULT_X,-self.creep.Y_MEAN,self.creep.DEFAULT_Z)
+        # self.Legs[A].setLegPos(self.creep.DEFAULT_X, self.creep.Y_MEAN,self.creep.DEFAULT_Z)
+        # self.Legs[B].setLegPos(self.creep.DEFAULT_X, self.creep.Y_MIN,self.creep.DEFAULT_Z)
+        # self.Legs[C].setLegPos(self.creep.DEFAULT_X,-self.creep.Y_MIN,self.creep.DEFAULT_Z)
+        # self.Legs[D].setLegPos(self.creep.DEFAULT_X,-self.creep.Y_MEAN,self.creep.DEFAULT_Z)
         
+        self.Legs[A].storeLegPos(self.creep.DEFAULT_X, self.creep.Y_MEAN,self.creep.DEFAULT_Z)
+        self.Legs[B].storeLegPos(self.creep.DEFAULT_X, self.creep.Y_MIN,self.creep.DEFAULT_Z)
+        self.Legs[C].storeLegPos(self.creep.DEFAULT_X,-self.creep.Y_MIN,self.creep.DEFAULT_Z)
+        self.Legs[D].storeLegPos(self.creep.DEFAULT_X,-self.creep.Y_MEAN,self.creep.DEFAULT_Z)
 
         self.creep.currentYa =  self.creep.Y_MEAN
         self.creep.currentYb =  self.creep.Y_MIN
@@ -179,45 +188,63 @@ class Quadruped:
         # Step 1 - Step Leg B And D Forward and PushBack Leg A and C Back
             # 1.Pickup the Leg
 
-        self.Legs[B].setLegPos(self.trot.DEFAULT_X,right_Y_MIN,self.trot.Z_PICKUP_HEIGHT_TROT)
-        self.Legs[D].setLegPos(self.trot.DEFAULT_X,-left_Y_MAX,self.trot.Z_PICKUP_HEIGHT_TROT)
+        # self.Legs[B].setLegPos(self.trot.DEFAULT_X,right_Y_MIN,self.trot.Z_PICKUP_HEIGHT_TROT)
+        # self.Legs[D].setLegPos(self.trot.DEFAULT_X,-left_Y_MAX,self.trot.Z_PICKUP_HEIGHT_TROT)
+        self.Legs[B].storeLegPos(self.trot.DEFAULT_X,right_Y_MIN,self.trot.Z_PICKUP_HEIGHT_TROT)
+        self.Legs[D].storeLegPos(self.trot.DEFAULT_X,-left_Y_MAX,self.trot.Z_PICKUP_HEIGHT_TROT)
 
         time.sleep(self.trot.trotDelay)
         
             # 1.Rotate Top
-        self.Legs[B].setLegPos(self.trot.DEFAULT_X,right_Y_MAX,self.trot.Z_STEP_UP_HEIGHT)
-        self.Legs[D].setLegPos(self.trot.DEFAULT_X,-left_Y_MIN,self.trot.Z_STEP_UP_HEIGHT)
+        # self.Legs[B].setLegPos(self.trot.DEFAULT_X,right_Y_MAX,self.trot.Z_STEP_UP_HEIGHT)
+        # self.Legs[D].setLegPos(self.trot.DEFAULT_X,-left_Y_MIN,self.trot.Z_STEP_UP_HEIGHT)
 
-        self.Legs[A].setLegPos(self.trot.DEFAULT_X,left_Y_MIN,self.trot.DEFAULT_Z)
-        self.Legs[C].setLegPos(self.trot.DEFAULT_X,-right_Y_MAX,self.trot.DEFAULT_Z)
+        # self.Legs[A].setLegPos(self.trot.DEFAULT_X,left_Y_MIN,self.trot.DEFAULT_Z)
+        # self.Legs[C].setLegPos(self.trot.DEFAULT_X,-right_Y_MAX,self.trot.DEFAULT_Z)
+        self.Legs[B].storeLegPos(self.trot.DEFAULT_X,right_Y_MAX,self.trot.Z_STEP_UP_HEIGHT)
+        self.Legs[D].storeLegPos(self.trot.DEFAULT_X,-left_Y_MIN,self.trot.Z_STEP_UP_HEIGHT)
+
+        self.Legs[A].storeLegPos(self.trot.DEFAULT_X,left_Y_MIN,self.trot.DEFAULT_Z)
+        self.Legs[C].storeLegPos(self.trot.DEFAULT_X,-right_Y_MAX,self.trot.DEFAULT_Z)
 
         time.sleep(self.trot.trotDelay)
         
             # 1.Drop Down the Leg
-        self.Legs[B].setLegPos(self.trot.DEFAULT_X,right_Y_MAX,self.trot.DEFAULT_Z)
-        self.Legs[D].setLegPos(self.trot.DEFAULT_X,-left_Y_MIN,self.trot.DEFAULT_Z)
+        # self.Legs[B].setLegPos(self.trot.DEFAULT_X,right_Y_MAX,self.trot.DEFAULT_Z)
+        # self.Legs[D].setLegPos(self.trot.DEFAULT_X,-left_Y_MIN,self.trot.DEFAULT_Z)
+        self.Legs[B].storeLegPos(self.trot.DEFAULT_X,right_Y_MAX,self.trot.DEFAULT_Z)
+        self.Legs[D].storeLegPos(self.trot.DEFAULT_X,-left_Y_MIN,self.trot.DEFAULT_Z)
         time.sleep(self.trot.trotDelay)
         
 
         # Step 2 - Step Leg A And C Forward and PushBack Leg B and D Back
         
             # 2.Pickup the Leg
-        self.Legs[A].setLegPos(self.trot.DEFAULT_X,left_Y_MIN,self.trot.Z_STEP_UP_HEIGHT)
-        self.Legs[C].setLegPos(self.trot.DEFAULT_X,-right_Y_MAX,self.trot.Z_STEP_UP_HEIGHT)
+        # self.Legs[A].setLegPos(self.trot.DEFAULT_X,left_Y_MIN,self.trot.Z_STEP_UP_HEIGHT)
+        # self.Legs[C].setLegPos(self.trot.DEFAULT_X,-right_Y_MAX,self.trot.Z_STEP_UP_HEIGHT)
+        self.Legs[A].storeLegPos(self.trot.DEFAULT_X,left_Y_MIN,self.trot.Z_STEP_UP_HEIGHT)
+        self.Legs[C].storeLegPos(self.trot.DEFAULT_X,-right_Y_MAX,self.trot.Z_STEP_UP_HEIGHT)
 
         time.sleep(self.trot.trotDelay)
             # 2.Rotate Top
-        self.Legs[A].setLegPos(self.trot.DEFAULT_X,left_Y_MAX,self.trot.Z_STEP_UP_HEIGHT)
-        self.Legs[C].setLegPos(self.trot.DEFAULT_X,-right_Y_MIN,self.trot.Z_STEP_UP_HEIGHT)
+        # self.Legs[A].setLegPos(self.trot.DEFAULT_X,left_Y_MAX,self.trot.Z_STEP_UP_HEIGHT)
+        # self.Legs[C].setLegPos(self.trot.DEFAULT_X,-right_Y_MIN,self.trot.Z_STEP_UP_HEIGHT)
 
-        self.Legs[B].setLegPos(self.trot.DEFAULT_X,right_Y_MIN,self.trot.DEFAULT_Z)
-        self.Legs[D].setLegPos(self.trot.DEFAULT_X,-left_Y_MAX,self.trot.DEFAULT_Z)
+        # self.Legs[B].setLegPos(self.trot.DEFAULT_X,right_Y_MIN,self.trot.DEFAULT_Z)
+        # self.Legs[D].setLegPos(self.trot.DEFAULT_X,-left_Y_MAX,self.trot.DEFAULT_Z)
+        self.Legs[A].storeLegPos(self.trot.DEFAULT_X,left_Y_MAX,self.trot.Z_STEP_UP_HEIGHT)
+        self.Legs[C].storeLegPos(self.trot.DEFAULT_X,-right_Y_MIN,self.trot.Z_STEP_UP_HEIGHT)
+
+        self.Legs[B].storeLegPos(self.trot.DEFAULT_X,right_Y_MIN,self.trot.DEFAULT_Z)
+        self.Legs[D].storeLegPos(self.trot.DEFAULT_X,-left_Y_MAX,self.trot.DEFAULT_Z)
 
         time.sleep(self.trot.trotDelay)
         
             # 2.Drop Down the Leg
-        self.Legs[A].setLegPos(self.trot.DEFAULT_X,left_Y_MAX,self.trot.DEFAULT_Z)
-        self.Legs[C].setLegPos(self.trot.DEFAULT_X,-right_Y_MIN,self.trot.DEFAULT_Z)
+        # self.Legs[A].setLegPos(self.trot.DEFAULT_X,left_Y_MAX,self.trot.DEFAULT_Z)
+        # self.Legs[C].setLegPos(self.trot.DEFAULT_X,-right_Y_MIN,self.trot.DEFAULT_Z)
+        self.Legs[A].storeLegPos(self.trot.DEFAULT_X,left_Y_MAX,self.trot.DEFAULT_Z)
+        self.Legs[C].storeLegPos(self.trot.DEFAULT_X,-right_Y_MIN,self.trot.DEFAULT_Z)
 
         time.sleep(self.trot.trotDelay)
         
@@ -244,11 +271,15 @@ class Quadruped:
             # Step 1 - Step Leg B Forward
             self.Legs[B].StepInY(right_Y_MIN,right_Y_MAX)
             self.creep.currentYb = right_Y_MAX
+            time.sleep(0.1)
 
             # input("Press Any Key to PushBack1")
             # Step 1.2 - Push Forward
+            start = time.time()
+            self.setSpeedAllLegs("SLOWER")
             self.stanceBackward(self.creep.totalShiftSize,diffFactor)
-
+            print("Main",time.time()-start)
+            self.setSpeedAllLegs("SLOW")
 
             # Step 2 - Step Leg D Forward
             self.Legs[D].StepInY(-left_Y_MAX,-left_Y_MIN)
@@ -257,10 +288,13 @@ class Quadruped:
             # Step 2.1 - Step Leg A Forward
             self.Legs[A].StepInY(left_Y_MIN,left_Y_MAX)
             self.creep.currentYa = left_Y_MAX
+            time.sleep(0.1)
 
             # input("Press Any Key to PushBack2")
             # Step 2.2 - Push Forward
+            self.setSpeedAllLegs("SLOWER")
             self.stanceBackward(self.creep.totalShiftSize,diffFactor)
+            self.setSpeedAllLegs("SLOW")
 
             # Step 3 - Step Leg C Forward
             self.Legs[C].StepInY(-right_Y_MAX,-right_Y_MIN)
@@ -383,7 +417,7 @@ class Leg:
         if (ID != None):
             self.setIDs(ID)
     
-        self.Z_STEP_UP_HEIGHT = -10  #$ -9 For creep
+        self.Z_STEP_UP_HEIGHT = -12  
         self.STEP_UP_DELAY = 0.2
 
         self.groupID = servo.createNewGroup()
@@ -428,7 +462,8 @@ class Leg:
             self.joints[TOP].storeAngle(t1)
             self.joints[MIDDLE].storeAngle(t2)
             self.joints[BOTTOM].storeAngle(t3)
-            
+            self.go2StoredPositions()
+            self.clearParam()
         else:
             print("Inverse Not Possible")
 
@@ -500,20 +535,21 @@ class Leg:
     def StepInY(self,from_y,to_y):
         # input("Press Any Key:Leg Pickup")
         # Pickup the Leg
-        self.setLegPos(self.x,from_y,self.Z_STEP_UP_HEIGHT)
-        # self.joints[BOTTOM].writeAngle(20);
+        # self.setLegPos(self.x,from_y,self.Z_STEP_UP_HEIGHT)
+        self.storeLegPos(self.x,from_y,self.Z_STEP_UP_HEIGHT)
         
         time.sleep(self.STEP_UP_DELAY)
         # input("Press Any Key:Leg Rotate")
         # Rotate Top
-        self.setLegPos(self.x,to_y,self.Z_STEP_UP_HEIGHT)
-        # self.joints[BOTTOM].writeAngle(20);
+        # self.setLegPos(self.x,to_y,self.Z_STEP_UP_HEIGHT)
+        self.storeLegPos(self.x,to_y,self.Z_STEP_UP_HEIGHT)
         
         self.y = to_y 
         time.sleep(self.STEP_UP_DELAY)
         # input("Press Any Key:Leg Drop")
         # Drop Down the Leg
-        self.setLegPos(self.x,to_y,self.z)
+        # self.setLegPos(self.x,to_y,self.z)
+        self.storeLegPos(self.x,to_y,self.z)
         time.sleep(self.STEP_UP_DELAY)
 
     def StepInYZ(self,from_y,to_y,to_z):
@@ -541,12 +577,12 @@ class Leg:
 
     def setSpeed(self,Mode):
         if Mode == "SLOWER":   SPEED = 100
-        elif Mode == "SLOW":   SPEED = 150
-        elif Mode == "NORMAL": SPEED = 400
+        elif Mode == "SLOW":   SPEED = 200
+        elif Mode == "NORMAL": SPEED = 300
 
         self.joints[TOP].setSpeed(SPEED)
         self.joints[MIDDLE].setSpeed(SPEED)
-        self.joints[BOTTOM].setSpseed(SPEED)
+        self.joints[BOTTOM].setSpeed(SPEED)
     
     def go2StoredPositions(self):
         if self.groupID!=None:
@@ -560,41 +596,52 @@ class Leg:
 
 
 if __name__=="__main__":
-    ids = [14, 8,15]
-    fixPts = [512-153.45,512,498]
-    dirVect = [-1,-1,1]
-    venom = Quadruped()
-    leg1 = Leg(ids)
-    leg1.setParams(dirVect,fixPts)
+    # ids = [14, 8,15]
+    # fixPts = [512-153.45,512,498]
+    # dirVect = [-1,-1,1]
+    # venom = Quadruped()
+    # leg1 = Leg(ids)
+    # leg1.setParams(dirVect,fixPts)
     
-    leg1.setVel(300,300,300)
-    leg1.storeLegPos(8,7,-16)
-    leg1.go2StoredPositions()
-    leg1.clearParam()   
+    # leg1.setVel(300,300,300)
+    # leg1.storeLegPos(8,7,-16)
+    # leg1.go2StoredPositions()
+    # leg1.clearParam()   
     
-    input("Press Enter to Begin Motion")
+    # input("Press Enter to Begin Motion")
     
-    start = time.time()
-    current = time.time()-start
+    # start = time.time()
+    # current = time.time()-start
 
-    velocityMapConst = 0.01162
+    # velocityMapConst = 0.01162
 
-    step = 0
+    # step = 0
 
-    while (current) <= (ip.Final_time-ip.Initial_time):
-        step += 1
+    # while (current) <= (ip.Final_time-ip.Initial_time):
+    #     step += 1
 
-        current = time.time()-start
-        config = ip.getInterpolate1d(current)
-        JointVel0, JointVel1, JointVel2 = ip.CalculateJointVelocities(config,current)
-        # print("config : ",config[0],config[1],config[2])
-        # print("vel : ",JointVel0, JointVel1, JointVel2)
-        # print(".....")
+    #     current = time.time()-start
+    #     config = ip.getInterpolate1d(current)
+    #     JointVel0, JointVel1, JointVel2 = ip.CalculateJointVelocities(config,current)
+    #     # print("config : ",config[0],config[1],config[2])
+    #     # print("vel : ",JointVel0, JointVel1, JointVel2)
+    #     # print(".....")
 
-        # leg1.setVel(JointVel0, JointVel1, JointVel2)
-        leg1.storeLegPos(config[0],config[1],config[2])
-        leg1.go2StoredPositions()
-        leg1.clearParam()
+    #     # leg1.setVel(JointVel0, JointVel1, JointVel2)
+    #     leg1.storeLegPos(config[0],config[1],config[2])
+    #     leg1.go2StoredPositions()
+    #     leg1.clearParam()
 
-        # time.sleep(0.1)
-    print("steps : ",step)
+    #     # time.sleep(0.1)
+    # print("steps : ",step)
+
+    venom = Quadruped(servoId)
+    venom.setParams(dirVector,FixedPoints)
+    venom.go2CreepStartPosition()
+    input("Press Enter")
+
+    while True:
+        start = time.time()
+        venom.Creep(False,2)
+        print("Loop",time.time()-start) 
+        # venom.Trot() 

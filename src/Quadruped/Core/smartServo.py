@@ -32,6 +32,8 @@ def writeAngle(Angle,Servo_Index):
 def readTorque(ID):
     return servos.read_torque(ID)
 
+def readLoad(ID):
+    return servos.read_load(ID,True)
 
 def readRawAngle(ID):
     return servos.read_pos(ID,0)

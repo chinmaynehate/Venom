@@ -1,4 +1,4 @@
-ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB0"
+ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB6"
 
 # DXL_LIB_PATH = "/home/carnage/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
 DXL_LIB_PATH = "/home/shanks/Downloads/Libraries/DynamixelSDK-master/c/build/linux64/libdxl_x64_c.so"
@@ -12,7 +12,7 @@ import numpy as np	#$
 class Creep:
     def __init__(self):
         # Creep Parameters
-        self.DEFAULT_X = 8   
+        self.DEFAULT_X = 6.5
         self.DEFAULT_Z = -16
         self.Y_MAX = 7
         self.Y_MIN = -2
@@ -72,19 +72,19 @@ class Slope:
 
 
 # Servo Props
-servoId = [ 9,18,16,
-            7, 2, 3,
+servoId = [ 9,16, 1,
+            7, 4, 3,
            12,13,17,
            14, 8,15]
 SERVO_RES = 0.2932551319648094
 
 #Set-Point of Each Servo
-FixedPoints = [516+153.45,512,508,
-               810-153.45,500,825,
+FixedPoints = [516+153.45,512,388,
+               810-153.45,445,825,
                512+153.45,512,502,
                512-153.45,512,498]  
 # Direction of Motion
-dirVector = [-1,1,1, 
+dirVector = [-1,1,-1, 
               1,-1,-1,
               1,1,1,
               -1,-1,1]
