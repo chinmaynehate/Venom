@@ -1,23 +1,21 @@
-ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB6"
+ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB0"
 
-# DXL_LIB_PATH = "/home/carnage/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
-DXL_LIB_PATH = "/home/shanks/Downloads/Libraries/DynamixelSDK-master/c/build/linux64/libdxl_x64_c.so"
-# DXL_LIB_PATH = "/home/swapnil/Documents/new/DynamixelSDK-master/c/build/linux64/libdxl_x64_c.so"
+DXL_LIB_PATH = "/home/carnage/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
 
 
 ENABLE_DXL_MESSAGES = False
 
-import numpy as np	#$
+import numpy as np	
 
 class Creep:
     def __init__(self):
         # Creep Parameters
         self.DEFAULT_X = 6.5
-        self.DEFAULT_Z = -16
+        self.DEFAULT_Z = -16.2
         self.Y_MAX = 7
         self.Y_MIN = -2
         self.Y_MEAN = (self.Y_MIN+self.Y_MAX)/2  
-        self.Z_STEP_UP_HEIGHT = -15
+        self.Z_STEP_UP_HEIGHT = -14
         self.totalShiftSize = (self.Y_MAX-self.Y_MIN)/2
         self.stanceIncrements = 2.5
         # Delays
@@ -27,13 +25,11 @@ class Trot:
     def __init__(self):
         # Trot Parameters
         self.DEFAULT_X = 6.5
-        self.DEFAULT_Z = -17
+        self.DEFAULT_Z = -16.2
         self.Y_MAX = 7
         self.Y_MIN = -2
           
-        self.Z_STEP_UP_HEIGHT = -15
-        self.Z_PICKUP_HEIGHT_TROT = -18
-
+        self.Z_STEP_UP_HEIGHT = -14.8
 
         self.trotDelay = 0.1
 
