@@ -24,40 +24,23 @@ def constructTrajectory_FourierSeries():
     print("Calculating Piecewise Fourier Series")
     FourierX = Piecewise( (fx1,t_current<=dc+dt) ,  (fx2 ,t_current<=T-dt ) , (fx3 , t_current<=1)   )
 
+    print("\n")
+    print("FOurier piecewise is    ",FourierX)
+    print("\n")
+   
     FourierXSeries = fourier_series( FourierX , (t_current,0,1)  )
-    print("FourierX Series Calculated: ")
+    p = FourierXSeries.truncate(100)
+    print("FourierX Series Calculated: ", p)
 
-    lam = lambdify(t_current,FourierXSeries)
-    print("Lmdify Done")
     lp = np.array(range( 0 , 100))
     for i in lp:
 
-        # current = FourierXSeries.subs(t_current,i/10)
-        current = lam(i/10)
-        # plt.scatter( i/10 , current )
-        print("at Input:",i," ,rESULT = ",current)
+        current = p.subs(t_current,i/100)
+           plt.scatter( i/100 , current )
 
-    # plt.show()
+    plt.show()
 
-    '''
-    print("calculating Fourier1")
-    Fourier1 = fourier_series( fx1(t_current) , (t_current,0,dc+dt)   )
-    print("calculating Fourier2")
-    Fourier2 = fourier_series( fx2(t_current) , (t_current,dc+dt,T-dt )    )
-    print("calculating Fourier3")
-    Fourier3 = fourier_series( fx3(t_current) , (t_current,T-dt,1)    )
-    # f2 = fourier_series( (a0 + a1*(t_current-(dc+dt)) + a2*(t_current-(dc+dt))**2.0 + a3*(t_current-(dc+dt))**3.0) )
-    print("Fourier1 = ",Fourier1.truncate())
-    print("\n\n\n")
-    print("Fourier2 = ",Fourier2.truncate())
-    print("\n\n\n")
-    print("Fourier3 = ",Fourier3.truncate())
-
-    '''
-
-    # FourierTotal = Fourier1+Fourier2+Fourier3
-    # print(FourierTotal)
-
+   
 
 
 if __name__=="__main__":
