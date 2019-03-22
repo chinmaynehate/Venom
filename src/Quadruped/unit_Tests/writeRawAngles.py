@@ -14,7 +14,7 @@ if __name__ == '__main__':
         servo.enable(Id)
         while True:
             exAngle = int(input("Enter the Servo Angle(0-1023)"))
-            servo.setSpeed(Id,200)
+            servo.setSpeed(Id,600)
             servo.writeRawAngle(Id,exAngle)
             print("------------------------------------------------------------------")
         print("\n[+] Disabling")

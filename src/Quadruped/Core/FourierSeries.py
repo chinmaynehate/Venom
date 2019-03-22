@@ -7,9 +7,6 @@ def constructTrajectory_FourierSeriesX():
     dt = 0.025
     T = 1.0
     stroke = 12.0
-    
-
-
 
     a3 = (-4.0*(stroke/2.0+stroke/dc*dt)-2.0*stroke/dc*(T-dc-2.0*dt))/(T-dc-2.0*dt)**3.0;
     a2 = -3.0/2.0*a3*(T-dc-2.0*dt);
@@ -30,7 +27,7 @@ def constructTrajectory_FourierSeriesX():
     print("\n")
    
     FourierXSeries = fourier_series( FourierX , (t_current,0,1)  )
-    p = FourierXSeries.truncate(1000)
+    p = FourierXSeries.truncate(100)
     print("FourierX Series Calculated: ", p)
 
     lp = np.array(range( 0 , 100))
@@ -138,5 +135,5 @@ def constructTrajectory_FourierSeriesXY():
 
 if __name__=="__main__":
     constructTrajectory_FourierSeriesXY()
-    #constructTrajectory_FourierSeriesX()
-    #constructTrajectory_FourierSeriesY()
+    # constructTrajectory_FourierSeriesX()
+    #constructTrajectory_FourierSeriesY()sudo apt-get install python3-tk 
