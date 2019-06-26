@@ -1,10 +1,3 @@
-ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB0"
-
-DXL_LIB_PATH = "/home/carnage/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
-
-
-ENABLE_DXL_MESSAGES = False
-
 import numpy as np	
 
 class Creep:
@@ -33,52 +26,13 @@ class Trot:
 
         self.trotDelay = 0.1
 
-class Slope:
-    def __init__(self):
-        #slope Parameters
-        self.DEFAULT_X = 6.5
-        BETA        = 18.4        #Distance between servo origns along the direction of motion 
-        self.Y_STEP = 4       #Step Size
-        CLEARANCE   = 14.0        #clearance between FRONT_MAX and bot height
-        THETA       = (7.9) * np.pi / 180      #Slope angle
-        Y_MINIMUM   = -1.5              #Change this to set Minimum Y for all legs		
-        SHIFT       = self.Y_STEP/2 - abs(Y_MINIMUM)    #Shift if Motion
-
-        self.FRONT_Y_MAX  = self.Y_STEP/2 - SHIFT
-        self.FRONT_Y_MIN  = self.FRONT_Y_MAX - self.Y_STEP
-        self.FRONT_Y_MEAN = (self.FRONT_Y_MIN + self.FRONT_Y_MAX)/2
-
-        self.BACK_Y_MAX  = self.Y_STEP/2 + SHIFT
-        self.BACK_Y_MIN  = self.BACK_Y_MAX - self.Y_STEP
-        self.BACK_Y_MEAN = (self.BACK_Y_MIN + self.BACK_Y_MAX)/2
-
-        self.Z_STEP = self.Y_STEP*np.tan(THETA)/2
-
-        #Front Legs are A and B
-        self.FRONT_Z_MAX  = -1 * (CLEARANCE)
-        self.FRONT_Z_MIN  = self.FRONT_Z_MAX - self.Y_STEP*np.tan(THETA)
-        self.FRONT_Z_MEAN = (self.FRONT_Z_MIN + self.FRONT_Z_MAX)/2
-
-        #Back Legs are C and D
-        self.BACK_Z_MAX  = -1 * (np.tan(THETA)*(BETA + self.Y_STEP + CLEARANCE/np.tan(THETA)))
-        self.BACK_Z_MIN  = self.BACK_Z_MAX + self.Y_STEP*np.tan(THETA)
-        self.BACK_Z_MEAN = (self.BACK_Z_MIN + self.BACK_Z_MAX)/2
-
-
-
 
 # Servo Props
-servoId = [ 9,16, 1,
-            7, 4, 3,
-           12,13,17,
-           14, 8,15]
-SERVO_RES = 0.2932551319648094
+servoId = [x for x in range(0,16)]
 
 #Set-Point of Each Servo
-FixedPoints = [516+153.45,512,388,
-               810-153.45,445,825,
-               512+153.45,512,502,
-               512-153.45,512,498]  
+FixedPoints = [ 90 ] * 12  
+
 # Direction of Motion
 dirVector = [-1,1,-1, 
               1,-1,-1,
