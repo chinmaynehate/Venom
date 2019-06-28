@@ -26,7 +26,6 @@ class Trot:
 
         self.trotDelay = 0.1
 
-
 # Servo Props
 servoId = [x for x in range(0,16)]
 
