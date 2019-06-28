@@ -43,6 +43,20 @@ dirVector = [-1,1,-1,
 linkLength = [5.5,0,8.3,16.2]
 # linkLength = [1,0,1,1]
 
+import board
+import busio
+from adafruit_servokit import ServoKit
+
+i2c = busio.I2C(board.SCL,board.SDA)
+kit1=None
+kit2=None
+
+def i2c_init():
+    print("Connecting to the I2C Bus......")
+    kit1 = ServoKit(channels=16,i2c=i2c,address=0x40)
+    kit2= ServoKit(channels=16,i2c=i2c,address=0x41)
+    print("I2C Bus Connected.")
+
 # Reference Constants
 A = 0
 B = 1
