@@ -30,12 +30,13 @@ class Trot:
 servoId = [11,10,7,9,8,3,10,8,4,6,0,14]
 
 #Set-Point of Each Servo
-FixedPoints = [ 103,99,35,91,80,45,94,102,45,98,98,45 ]  
+# FixedPoints = [ 103,99,35,91,80,45,94,102,45,98,98,45 ]  
+FixedPoints = [ 103,99,0,91,80,0,94,102,0,98,98,20 ]  
 
 # Direction of Motion
 dirVector = [-1,1,-1, 
-              1,-1,-1,
-              1,1,1,
+              1,-1,1,
+              1,1,-1,
               -1,-1,1]
 
 # Venom Props
@@ -48,14 +49,14 @@ import busio
 from adafruit_servokit import ServoKit
 
 i2c = busio.I2C(board.SCL,board.SDA)
-kit1=None
-kit2=None
+# kit1=None
+# kit2=None
 
-def i2c_init():
-    print("Connecting to the I2C Bus......")
-    kit1 = ServoKit(channels=16,i2c=i2c,address=0x40)
-    kit2= ServoKit(channels=16,i2c=i2c,address=0x41)
-    print("I2C Bus Connected.")
+# def i2c_init():
+print("Connecting to the I2C Bus......")
+kit1 = ServoKit(channels=16,i2c=i2c,address=0x40)
+kit2= ServoKit(channels=16,i2c=i2c,address=0x41)
+print("I2C Bus Connected.")
 
 # Reference Constants
 A = 0

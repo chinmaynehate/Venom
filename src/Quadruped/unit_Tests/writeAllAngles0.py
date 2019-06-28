@@ -14,9 +14,13 @@ if __name__ == '__main__':
         for i in range(0,12):
             servo=None
             if i<6:
-                servo = sServo.pwmServo(ID=k.servoId[i],dirVector=k.dirVector[i],fixedPoint=k.FixedPoints[i],kit=k.kit2)
+                servo = sServo.pwmServo(index=k.servoId[i],dirVector=k.dirVector[i],fixedPoint=k.FixedPoints[i],kit=k.kit2)
+                servo.setKit(k.kit2)
             else:
-                servo = sServo.pwmServo(ID=k.servoId[i],dirVector=k.dirVector[i],fixedPoint=k.FixedPoints[i],kit=k.kit1)
+                servo = sServo.pwmServo(index=k.servoId[i],dirVector=k.dirVector[i],fixedPoint=k.FixedPoints[i],kit=k.kit1)
+                servo.setKit(k.kit1)
+                
+            servo.setPWM(500,2500)
             servoList.append(servo)
             
         Tangle = 0
