@@ -27,10 +27,10 @@ class Trot:
         self.trotDelay = 0.1
 
 # Servo Props
-servoId = [x for x in range(0,16)]
+servoId = [11,10,7,9,8,3,10,8,4,6,0,14]
 
 #Set-Point of Each Servo
-FixedPoints = [ 90 ] * 12  
+FixedPoints = [ 103,99,35,91,80,45,94,102,45,98,98,45 ]  
 
 # Direction of Motion
 dirVector = [-1,1,-1, 
