@@ -31,6 +31,12 @@ class Quadruped:
     def setParams(self,dirParams,fixedPtsParams):
         for i in range(0,4):
                 self.Legs[i].setParams(dirParams[i*3:i*3+3],fixedPtsParams[i*3:i*3+3])
+        
+        self.Legs[A].setKit(kit2)
+        self.Legs[B].setKit(kit1)
+        self.Legs[C].setKit(kit1)
+        self.Legs[D].setKit(kit2)
+
 
     def stanceBackward(self,totalShift,diffFactor=None):
         #Push the Legs Backwards Together i.e Push THe Bot Forward   (Creep Gait)
@@ -170,29 +176,39 @@ class Quadruped:
                 right_Y_MIN=self.creep.Y_MIN
 
         # Step 1 - Step Leg B Forward
+        input("Step B Forward")
         self.Legs[B].StepInY(right_Y_MIN,right_Y_MAX)
         self.creep.currentYb = right_Y_MAX
 
-        # input("Press Any Key to PushBack1")
+        input("Press Any Key to PushBack1")
         # Step 1.2 - Push Forward
         self.stanceBackward(self.creep.totalShiftSize,diffFactor)
 
+        time.sleep(0.3)
         # Step 2 - Step Leg D Forward
+        input("Step D Forward")
         self.Legs[D].StepInY(-left_Y_MAX,-left_Y_MIN)
         self.creep.currentYd = -left_Y_MIN
 
+        time.sleep(0.5)
+
         # Step 2.1 - Step Leg A Forward
+        input("Step A Forward")
         self.Legs[A].StepInY(left_Y_MIN,left_Y_MAX)
         self.creep.currentYa = left_Y_MAX
         time.sleep(0.1)
 
-        # input("Press Any Key to PushBack2")
+        input("Press Any Key to PushBack2")
         # Step 2.2 - Push Forward
         self.stanceBackward(self.creep.totalShiftSize,diffFactor)
 
+        time.sleep(0.4)
         # Step 3 - Step Leg C Forward
+        input("Step C Forward")
         self.Legs[C].StepInY(-right_Y_MAX,-right_Y_MIN)
         self.creep.currentYc = -right_Y_MIN
+
+        time.sleep(0.4)
     
 
     def walk(self,Mode,diffFactor=None):
@@ -218,20 +234,25 @@ class Leg:
         if (ID != None):
             self.setIDs(ID)
     
-        self.Z_STEP_UP_HEIGHT = -12  
-        self.STEP_UP_DELAY = 0.2
+        self.Z_STEP_UP_HEIGHT = -14  
+        self.STEP_UP_DELAY = 0.7
 
 
     def setIDs(self,ID):
-        self.joints[TOP].setID(ID[TOP])
-        self.joints[MIDDLE].setID(ID[MIDDLE])
-        self.joints[BOTTOM].setID(ID[BOTTOM])
+        self.joints[TOP].setIndex(ID[TOP])
+        self.joints[MIDDLE].setIndex(ID[MIDDLE])
+        self.joints[BOTTOM].setIndex(ID[BOTTOM])
     
     def setParams(self,dirParams,fixedPointParams):
         self.joints[TOP].setParams(dirParams[TOP],fixedPointParams[TOP])
         self.joints[MIDDLE].setParams(dirParams[MIDDLE],fixedPointParams[MIDDLE])
         self.joints[BOTTOM].setParams(dirParams[BOTTOM],fixedPointParams[BOTTOM])
         self.doOnce = True
+    
+    def setKit(self,kit):
+        for x in self.joints:
+            x.setKit(kit)
+            x.setPWM(500,2500)
 
     def setLegPos(self,x,y,z):
         t1,t2,t3,isPossible = ik.getInverse(x,y,z)
@@ -250,6 +271,8 @@ class Leg:
             
         else:
             print("Inverse Not Possible")
+
+    
 
     def StepInY(self,from_y,to_y):
 

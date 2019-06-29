@@ -23,8 +23,8 @@ class pwmServo:
             self.dirVector = dirVector
         if fixedPoint!=None:
             self.fixedPoint=fixedPoint
-        
-        self.kit=kit
+        if kit!=None:
+            self.kit=kit
         
 
     def setIndex(self,index):
@@ -48,10 +48,10 @@ class pwmServo:
         RawAngle =   (Angle * self.dirVector) + self.fixedPoint  
         #print("Writing Raw :",RawAngle)
         if RawAngle>=180:
-            print("Angle Limit Reached")
+            print("Angle Limit Reached of Servo:",self.index)
             RawAngle=180
         elif RawAngle<=0:
-            print("Angle Limit Reached")
+            print("Angle Limit Reached of Servo:",self.index)
             RawAngle=0
         # print(self.kit)
         return writeAngle(self.index,RawAngle,self.kit)
