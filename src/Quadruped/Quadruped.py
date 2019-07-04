@@ -302,4 +302,4 @@ if __name__=="__main__":
     venom.go2CreepStartPosition()
     input("Press Enter")
 
-    venom.walk(TROT) 
+    venom.walk(CREEP) 

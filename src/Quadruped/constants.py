@@ -29,7 +29,7 @@ class Trot:
 # Servo Props
 servoId = [9,8,3,
             10,8,4,
-            6,0,14,
+            2,0,14,
             11,10,7]
 
 #Set-Point of Each Servo
@@ -58,7 +58,7 @@ import board
 import busio
 from adafruit_servokit import ServoKit
 
-i2c = busio.I2C(board.SCL,board.SDA)
+i2c = busio.I2C(board.SCL_1,board.SDA_1)
 # kit1=None
 # kit2=None
 
