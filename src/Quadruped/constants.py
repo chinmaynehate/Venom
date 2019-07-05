@@ -3,14 +3,14 @@ import numpy as np
 class Creep:
     def __init__(self):
         # Creep Parameters
-        self.DEFAULT_X = 6.5
-        self.DEFAULT_Z = -16.2
-        self.Y_MAX = 7
-        self.Y_MIN = -2
+        self.DEFAULT_X = 5.5
+        self.DEFAULT_Z = -16.3
+        self.Y_MAX = 4
+        self.Y_MIN = -1
         self.Y_MEAN = (self.Y_MIN+self.Y_MAX)/2  
-        self.Z_STEP_UP_HEIGHT = -14
+        self.Z_STEP_UP_HEIGHT = -15.2
         self.totalShiftSize = (self.Y_MAX-self.Y_MIN)/2
-        self.stanceIncrements = 2.5
+        self.stanceIncrements = 1.0
         # Delays
         self.shiftAllInterDelay = 0.01
 
@@ -18,31 +18,55 @@ class Trot:
     def __init__(self):
         # Trot Parameters
         self.DEFAULT_X = 6.5
-        self.DEFAULT_Z = -16.2
-        self.Y_MAX = 7
+        self.DEFAULT_Z = -16.3
+        self.Y_MAX = 5
         self.Y_MIN = -2
           
-        self.Z_STEP_UP_HEIGHT = -14.8
+        self.Z_STEP_UP_HEIGHT = -14
 
-        self.trotDelay = 0.1
-
+        self.trotDelay = 0.5
 
 # Servo Props
-servoId = [x for x in range(0,16)]
+servoId = [9,8,3,
+            10,8,4,
+            2,0,14,
+            11,10,7]
 
 #Set-Point of Each Servo
-FixedPoints = [ 90 ] * 12  
+# FixedPoints = [91 - 45,40 + 50,116,
+#                 94 + 45,51 + 50,0,
+#                 98 -45,49 + 50,90, 
+#                 103+45,50 + 50,0 ]
+
+FixedPoints = [91 - 45,40 ,116,
+                94 + 45,51 ,0,
+                98 -45,49 ,90, 
+                103+45,50 ,0 ]  
 
 # Direction of Motion
-dirVector = [-1,1,-1, 
-              1,-1,-1,
+dirVector = [ 1,1,1,
               1,1,1,
-              -1,-1,1]
+              -1,1,-1,
+            -1,1,1,]
 
 # Venom Props
 
-linkLength = [5.5,0,8.3,16.2]
+linkLength = [5.5,0,7.6,16.3]
 # linkLength = [1,0,1,1]
+
+import board
+import busio
+from adafruit_servokit import ServoKit
+
+i2c = busio.I2C(board.SCL_1,board.SDA_1)
+# kit1=None
+# kit2=None
+
+# def i2c_init():
+print("Connecting to the I2C Bus......")
+kit1 = ServoKit(channels=16,i2c=i2c,address=0x40)
+kit2= ServoKit(channels=16,i2c=i2c,address=0x41)
+print("I2C Bus Connected.")
 
 # Reference Constants
 A = 0
