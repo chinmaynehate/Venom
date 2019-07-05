@@ -9,7 +9,7 @@ if __name__ == '__main__':
     if servo.init():
     	#take Id for the Servos as Input
 
-        Id = int(input("Enter The Servo ID(Enter -1 to Quit):"))
+        Id = int(input("Enter The Servo ID(Enter -1 to Quit)s:"))
         while True:
             exAngle = int(input("Enter the Servo Angle(0-180)"))
             servo.writeAngle(Id,exAngle)
