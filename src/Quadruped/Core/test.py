@@ -2,7 +2,7 @@ import board
 import busio
 from adafruit_servokit import ServoKit
 
-i2c = busio.I2C(board.SCL,board.SDA)
+i2c = busio.I2C(board.SCL_1,board.SDA_1)
 
 print("Connecting to the I2C Bus......")
 kit1 = ServoKit(channels=16,i2c=i2c,address=0x40)
