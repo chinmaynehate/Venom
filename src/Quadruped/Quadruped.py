@@ -8,6 +8,9 @@ import kinematics as ik
 import time
 import math
 from helpers import *
+import JGpio as gpio
+import IMU as imu
+
 
 class Quadruped:
     def __init__(self,servoIndexes=None):
@@ -38,6 +41,7 @@ class Quadruped:
         self.Legs[D].setKit(kit1)
 
 
+
     def stanceBackward(self,totalShift,diffFactor=None):
         #Push the Legs Backwards Together i.e Push THe Bot Forward   (Creep Gait)
         # If Differential_Factor -> 1 then there is no push from either side of the Leg
@@ -66,10 +70,10 @@ class Quadruped:
         
         
         # Write the Input Position to the Legs
-        self.Legs[A].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYa ,self.creep.DEFAULT_Z)
-        self.Legs[B].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYb  ,self.creep.DEFAULT_Z)
-        self.Legs[C].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYc ,self.creep.DEFAULT_Z)
-        self.Legs[D].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYd  ,self.creep.DEFAULT_Z)
+        self.Legs[A].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYa , self.Legs[A].z)
+        self.Legs[B].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYb , self.Legs[B].z)
+        self.Legs[C].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYc , self.Legs[C].z)
+        self.Legs[D].setLegPos(self.creep.DEFAULT_X ,self.creep.currentYd  ,self.Legs[D].z)
 
     def go2CreepStartPosition(self):
         # Starting Position for Creep Position
@@ -84,6 +88,11 @@ class Quadruped:
         self.creep.currentYb = -self.creep.Y_MIN
         self.creep.currentYc = -self.creep.Y_MEAN
         self.creep.currentYd = self.creep.Y_MEAN
+
+        self.Legs[A].z=self.creep.DEFAULT_Z
+        self.Legs[B].z=self.creep.DEFAULT_Z
+        self.Legs[C].z=self.creep.DEFAULT_Z
+        self.Legs[D].z=self.creep.DEFAULT_Z
 
     def Trot(self,diffFactor=None,direction=1):
         
@@ -155,7 +164,8 @@ class Quadruped:
         self.Legs[C].setLegPos(self.trot.DEFAULT_X,-right_Y_MIN,self.trot.DEFAULT_Z)
 
         time.sleep(self.trot.trotDelay)
-        
+
+
     def Creep(self,diffFactor=None):
        
         if diffFactor==None:
@@ -213,6 +223,66 @@ class Quadruped:
         self.creep.currentYb = -right_Y_MIN
 
         time.sleep(0.1)
+
+
+
+    def Creep_w_bump(self,diffFactor=None):
+       
+        if diffFactor==None:
+            left_Y_MAX=self.creep.Y_MAX
+            left_Y_MIN=self.creep.Y_MIN
+            right_Y_MAX=self.creep.Y_MAX
+            right_Y_MIN=self.creep.Y_MIN
+        else:
+            if diffFactor>=0:       #Turn Right
+                left_Y_MAX=self.creep.Y_MAX
+                left_Y_MIN=self.creep.Y_MIN
+                right_Y_MAX=self.creep.Y_MAX*(1.0-diffFactor)/2
+                right_Y_MIN=self.creep.Y_MIN*(1.0-diffFactor)/2
+            else:                   #Turn Left
+                left_Y_MAX=self.creep.Y_MAX*(1.0+diffFactor)/2
+                left_Y_MIN=self.creep.Y_MIN*(1.0+diffFactor)/2
+                right_Y_MAX=self.creep.Y_MAX
+                right_Y_MIN=self.creep.Y_MIN
+
+        
+        # Step 2.1 - Step Leg A Forward
+        # input("Step A Forward")
+        self.Legs[A].StepInY_feedback(left_Y_MIN,left_Y_MAX)
+        self.creep.currentYa = left_Y_MAX
+        time.sleep(0.1)
+        
+        # input("Press Any Key to PushBack1")
+        # Step 1.2 - Push Forward
+        self.stanceBackward(self.creep.totalShiftSize,diffFactor)
+        
+
+        time.sleep(0.1)
+        # Step 3 - Step Leg C Forward
+        # input("Step C Forward")
+        self.Legs[C].StepInY_feedback(-right_Y_MAX,-right_Y_MIN)
+        self.creep.currentYc = -right_Y_MIN
+
+        time.sleep(0.1)
+
+        # Step 2 - Step Leg D Forward
+        # input("Step D Forward")
+        self.Legs[D].StepInY_feedback(left_Y_MIN,left_Y_MAX)
+        self.creep.currentYd = left_Y_MAX
+
+        time.sleep(0.1)
+
+        # input("Press Any Key to PushBack2")
+        # Step 2.2 - Push Forward
+        self.stanceBackward(self.creep.totalShiftSize,diffFactor)
+
+
+        # Step 1 - Step Leg B Forward
+        # input("Step B Forward")
+        self.Legs[B].StepInY_feedback(-right_Y_MAX,-right_Y_MIN)
+        self.creep.currentYb = -right_Y_MIN
+
+        time.sleep(0.1)
         
     
 
@@ -226,9 +296,24 @@ class Quadruped:
                 self.Trot(diffFactor)
             elif Mode == TROT_BACK:
                 self.Trot(diffFactor,direction=-1)
+            elif Mode == CREEP_DYN:
+                self.Creep_w_bump(diffFactor)
             else:
                 print("Walking Mode is Not Specified")
                 quit()
+
+    def walkOnce(self,Mode,command=None,diffFactor=None):
+        if Mode == CREEP:
+            self.Creep(diffFactor)
+        elif Mode == TROT:
+            self.Trot(diffFactor)
+        elif Mode == TROT_BACK:
+            self.Trot(diffFactor,direction=-1)
+        elif Mode == CREEP_DYN:
+            self.Creep_w_bump(diffFactor)
+        else:
+            print("Walking Mode is Not Specified")
+
         
 
 
@@ -240,7 +325,10 @@ class Leg:
             self.setIDs(ID)
     
         self.Z_STEP_UP_HEIGHT = -13
-        self.STEP_UP_DELAY = 0.15
+        self.STEP_UP_DELAY = 0.25
+
+        self.BUMP_STATUS=False
+        self.bumpPin=None
 
 
     def setIDs(self,ID):
@@ -258,6 +346,10 @@ class Leg:
         for x in self.joints:
             x.setKit(kit)
             x.setPWM(500,2500)
+
+    def setBumpPin(self,pin):
+        self.bPin = pin
+        gpio.setInput(pin)
 
     def setLegPos(self,x,y,z):
         t1,t2,t3,isPossible = ik.getInverse(x,y,z)
@@ -277,7 +369,8 @@ class Leg:
         else:
             print("Inverse Not Possible")
 
-    
+    def updateBumpStatus(self):
+        pass
 
     def StepInY(self,from_y,to_y):
 
@@ -292,19 +385,81 @@ class Leg:
         self.setLegPos(self.x,to_y,self.Z_STEP_UP_HEIGHT)
         time.sleep(self.STEP_UP_DELAY)
         self.y = to_y 
-
+        
         # input("Press Any Key:Leg Drop")
         # Drop Down the Leg
         self.setLegPos(self.x,to_y,self.z)
         time.sleep(self.STEP_UP_DELAY)
 
+    def StepInY_feedback(self,from_y,to_y):
 
+        # input("Press Any Key:Leg Pickup")
+        # Pickup the Leg
+        self.setLegPos(self.x,from_y,self.Z_STEP_UP_HEIGHT)
+        time.sleep(self.STEP_UP_DELAY)
+
+
+        # input("Press Any Key:Leg Rotate")
+        # Rotate Top
+        self.setLegPos(self.x,to_y,self.Z_STEP_UP_HEIGHT)
+        time.sleep(self.STEP_UP_DELAY)
+        self.y = to_y 
+        
+        self.setLegPos(self.x,to_y,self.Z_STEP_UP_HEIGHT-2)
+        time.sleep(0.1)
+
+
+
+        initialYPR =imu.read()
+        ERROR_THRESH = 1.0
+        Kp = 0.1
+        # Check Drop Down Leg
+        currentZ = self.Z_STEP_UP_HEIGHT-2
+
+        while True:
+            currentYPR = imu.read()
+            error = ((initialYPR[1]-currentYPR[1])**2 + (initialYPR[2]-currentYPR[2])**2)**0.5
+            print("Error:",error," , currentZ:",currentZ)
+            # if(error>ERROR_THRESH):
+            #     break
+            if(error>ERROR_THRESH):
+                break
+            print("Looking for Base Unstability")
+            self.setLegPos(self.x,to_y,currentZ)
+            # input("Press Any Key to Drop Down")
+            currentZ-=dropDownIncrements
+            time.sleep(dropDownDelay)    
+
+        Kp=0.3
+        ERROR_THRESH=0.4
+        while True:
+            currentYPR = imu.read()
+            error = ((initialYPR[1]-currentYPR[1])**2 + (initialYPR[2]-currentYPR[2])**2)**0.5
+            correction = Kp*error
+            print("Error:",error," , currentZ:",currentZ," , correction:",correction)
+            if(error<ERROR_THRESH):
+                break
+
+            
+            # print("Stabilizing Base")
+            self.setLegPos(self.x,to_y,currentZ)
+            # input("Stabilizing Base ,Press Any key to go Up")
+            currentZ+=correction
+            time.sleep(dropDownDelay)    
+
+        self.z=currentZ
+        
+        # input("Press Any Key:Leg Drop")
+        # Drop Down the Leg
+        self.setLegPos(self.x,to_y,self.z)
+        input("DropDown Complete")
+        time.sleep(self.STEP_UP_DELAY)
 
 if __name__=="__main__":
-
+    imu.start()
     venom = Quadruped(servoId)
     venom.setParams(dirVector,FixedPoints)
     venom.go2CreepStartPosition()
     input("Press Enter")
+    venom.walk(CREEP_DYN)
 
-    venom.walk(CREEP)

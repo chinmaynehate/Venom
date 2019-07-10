@@ -10,7 +10,7 @@ def setPwmRange(index,lowerPWM,higherPWM,kit):
     kit.servo[index].set_pulse_width_range(lowerPWM,higherPWM)
 
 def writeAngle(index,Angle,kit): #( _ , 0-180)
-    print("Writing Angle:",Angle," to Index:",index)
+    # print("Writing Angle:",Angle," to Index:",index)
     kit.servo[index].angle=Angle   
 
 # Servo Object 

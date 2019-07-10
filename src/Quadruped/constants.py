@@ -22,9 +22,22 @@ class Trot:
         self.Y_MAX = 5
         self.Y_MIN = -2
           
-        self.Z_STEP_UP_HEIGHT = -15
+        self.Z_STEP_UP_HEIGHT = -12
 
         self.trotDelay = 0.2
+
+
+# Dynamic Leg Placing Params
+# Pins for BumpSwitch
+BUMPA=18
+BUMPB=17
+BUMPC=22
+BUMPD=27
+
+dropDownMax = -22
+dropDownIncrements=0.2
+dropDownDelay=0.1
+
 
 # Servo Props
 servoId = [6,4,3,
@@ -52,7 +65,9 @@ dirVector = [ 1,1,1,
 # Venom Props
 
 linkLength = [5.5,0,7.6,16.3]
-# linkLength = [1,0,1,1]
+# linikLength = [1,0,1,1]
+
+
 
 import board
 import busio
@@ -80,3 +95,4 @@ BOTTOM = 2
 CREEP = 0
 TROT = 1
 TROT_BACK=2
+CREEP_DYN=3
