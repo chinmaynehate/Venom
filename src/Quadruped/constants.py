@@ -1,94 +1,72 @@
-ttyUSB_USB2DYNAMIXEL = "/dev/ttyUSB0"
-
-DXL_LIB_PATH = "/home/carnage/DynamixelSDK/c/build/linux64/libdxl_x64_c.so"
-
-
-ENABLE_DXL_MESSAGES = False
-
 import numpy as np	
 
 class Creep:
     def __init__(self):
         # Creep Parameters
-        self.DEFAULT_X = 6.5
-        self.DEFAULT_Z = -16.2
-        self.Y_MAX = 7
+        self.DEFAULT_X = 7
+        self.DEFAULT_Z = -18
+        self.Y_MAX = 5
         self.Y_MIN = -2
         self.Y_MEAN = (self.Y_MIN+self.Y_MAX)/2  
-        self.Z_STEP_UP_HEIGHT = -14
+        self.Z_STEP_UP_HEIGHT = -12
         self.totalShiftSize = (self.Y_MAX-self.Y_MIN)/2
-        self.stanceIncrements = 2.5
+        self.stanceIncrements = 1.0
         # Delays
         self.shiftAllInterDelay = 0.01
 
 class Trot:	
     def __init__(self):
         # Trot Parameters
-        self.DEFAULT_X = 6.5
-        self.DEFAULT_Z = -16.2
-        self.Y_MAX = 7
+        self.DEFAULT_X = 7
+        self.DEFAULT_Z = -18
+        self.Y_MAX = 5
         self.Y_MIN = -2
           
-        self.Z_STEP_UP_HEIGHT = -14.8
+        self.Z_STEP_UP_HEIGHT = -15
 
-        self.trotDelay = 0.1
-
-class Slope:
-    def __init__(self):
-        #slope Parameters
-        self.DEFAULT_X = 6.5
-        BETA        = 18.4        #Distance between servo origns along the direction of motion 
-        self.Y_STEP = 4       #Step Size
-        CLEARANCE   = 14.0        #clearance between FRONT_MAX and bot height
-        THETA       = (7.9) * np.pi / 180      #Slope angle
-        Y_MINIMUM   = -1.5              #Change this to set Minimum Y for all legs		
-        SHIFT       = self.Y_STEP/2 - abs(Y_MINIMUM)    #Shift if Motion
-
-        self.FRONT_Y_MAX  = self.Y_STEP/2 - SHIFT
-        self.FRONT_Y_MIN  = self.FRONT_Y_MAX - self.Y_STEP
-        self.FRONT_Y_MEAN = (self.FRONT_Y_MIN + self.FRONT_Y_MAX)/2
-
-        self.BACK_Y_MAX  = self.Y_STEP/2 + SHIFT
-        self.BACK_Y_MIN  = self.BACK_Y_MAX - self.Y_STEP
-        self.BACK_Y_MEAN = (self.BACK_Y_MIN + self.BACK_Y_MAX)/2
-
-        self.Z_STEP = self.Y_STEP*np.tan(THETA)/2
-
-        #Front Legs are A and B
-        self.FRONT_Z_MAX  = -1 * (CLEARANCE)
-        self.FRONT_Z_MIN  = self.FRONT_Z_MAX - self.Y_STEP*np.tan(THETA)
-        self.FRONT_Z_MEAN = (self.FRONT_Z_MIN + self.FRONT_Z_MAX)/2
-
-        #Back Legs are C and D
-        self.BACK_Z_MAX  = -1 * (np.tan(THETA)*(BETA + self.Y_STEP + CLEARANCE/np.tan(THETA)))
-        self.BACK_Z_MIN  = self.BACK_Z_MAX + self.Y_STEP*np.tan(THETA)
-        self.BACK_Z_MEAN = (self.BACK_Z_MIN + self.BACK_Z_MAX)/2
-
-
-
+        self.trotDelay = 0.2
 
 # Servo Props
-servoId = [ 9,16, 1,
-            7, 4, 3,
-           12,13,17,
-           14, 8,15]
-SERVO_RES = 0.2932551319648094
+servoId = [6,4,3,
+            9,8,7,
+            9,2,12,
+            4,3,15]
 
 #Set-Point of Each Servo
-FixedPoints = [516+153.45,512,388,
-               810-153.45,445,825,
-               512+153.45,512,502,
-               512-153.45,512,498]  
+# FixedPoints = [91 - 45,40 + 50,116,
+#                 94 + 45,51 + 50,0,
+#                 98 -45,49 + 50,90, 
+#                 103+45,50 + 50,0 ]
+
+FixedPoints = [20,95 ,100,
+              112,95 ,85,
+                55,95 ,95, 
+                43,111 ,110 ]  
+
 # Direction of Motion
-dirVector = [-1,1,-1, 
-              1,-1,-1,
+dirVector = [ 1,1,1,
               1,1,1,
-              -1,-1,1]
+              -1,-1,-1,
+            1,1,1,]
 
 # Venom Props
 
-linkLength = [5.5,0,8.3,16.2]
+linkLength = [5.5,0,7.6,16.3]
 # linkLength = [1,0,1,1]
+
+import board
+import busio
+from adafruit_servokit import ServoKit
+
+i2c = busio.I2C(board.SCL_1,board.SDA_1)
+# kit1=None
+# kit2=None
+
+# def i2c_init():
+print("Connecting to the I2C Bus......")
+kit1 = ServoKit(channels=16,i2c=i2c,address=0x40)
+kit2= ServoKit(channels=16,i2c=i2c,address=0x41)
+print("I2C Bus Connected.")
 
 # Reference Constants
 A = 0
