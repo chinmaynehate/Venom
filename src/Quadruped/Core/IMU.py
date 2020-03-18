@@ -68,4 +68,4 @@ if __name__=="__main__":
     time.sleep(0.3)
     while True:
         print(read())
-        time.sleep(0.05)
+        time.sleep(0.04)
