@@ -25,8 +25,6 @@
 
 ## Table of Contents (Optional)
 
-> If your `README` has a lot of info, section headers might be nice.
-
 - [Installation](#Software-Installation)
 - [Installation](#Hardware-Stack)
 - [Team](#team)
@@ -57,7 +55,8 @@ venom.walk(TROT)
 ## Hardware-Stack
 
 -  [Jetson Nano](https://www.nvidia.com/en-in/autonomous-machines/embedded-systems/jetson-nano/) (RasberryPi will work as well)
--  Servo Motors: [ 12 Dynamixel AX-12A](https://www.trossenrobotics.com/dynamixel-ax-12-robot-actuator.aspx) or better / any Normal PWM Servo Motor (Torque > 20kgcm )
+-  Servo Motors:  [ 12 Dynamixel AX-12A](https://www.trossenrobotics.com/dynamixel-ax-12-robot-actuator.aspx) or better / any Normal PWM Servo Motor (Torque > 20kgcm ). 
+- Servo Motors(Alternate Servos): [Coreless Servo](https://robokits.co.in/motors/rc-servo-motors/ultra-torque-dual-shaft-metal-gear-35kgcm-coreless-servo-w-t-acc)
 -  [PCA9685 16 Channel PWM Servo Driver](https://www.amazon.com/SunFounder-PCA9685-Channel-Arduino-Raspberry/dp/B014KTSMLA) for PWM Servo , [CM-530 Robotis Servo Controller
 ](https://www.trossenrobotics.com/p/cm-530-robotis-servo-controller.aspx) for Dyanmixel Servos.
 - Acrylic Chasis (CAD Files Available)
