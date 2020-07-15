@@ -1,4 +1,4 @@
-<a href="https://www.youtube.com/watch?v=NFO0sFC34yE&t=108s"><img src="https://i.imgur.com/0I80tvl.jpg" title="Venom" alt="Venom"></a>
+<a href="https://www.youtube.com/watch?v=NFO0sFC34yE&t=108s"><img src="https://i.imgur.com/M67nE8U.jpg" title="Venom" alt="Venom"></a>
 
 
 # Venom : Sprawling-type Quadruped robot
