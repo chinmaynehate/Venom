@@ -1,4 +1,4 @@
-<img src="https://i.imgur.com/0I80tvl.jpg" title="Venom" alt="Venom">
+<a href="https://www.youtube.com/watch?v=NFO0sFC34yE&t=108s"><img src="https://i.imgur.com/0I80tvl.jpg" title="Venom" alt="Venom"></a>
 
 
 # Venom : Sprawling-type Quadruped robot
@@ -27,12 +27,10 @@
 
 > If your `README` has a lot of info, section headers might be nice.
 
-- [Installation](#installation)
-- [Features](#features)
-- [Contributing](#contributing)
+- [Installation](#Software-Installation)
+- [Installation](#Hardware-Stack)
 - [Team](#team)
 - [FAQ](#faq)
-- [Support](#support)
 - [License](#license)
 
 
@@ -45,26 +43,18 @@ venom = Quadruped(servoId) # Servo ID Array
 venom.setParams(dirVector,FixedPoints)# Servo Direction and Set Points
 venom.go2CreepStartPosition()
 input("Press Enter") # Wait for user Input
+# For CREEP GAIT
 venom.walk(CREEP)
-```
-
-## Trot GAIT Example
-
-```python
-venom = Quadruped(servoId) # Servo ID Array
-venom.setParams(dirVector,FixedPoints)# Servo Direction and Set Points
-venom.go2CreepStartPosition()
-input("Press Enter") # Wait for user Input
+# For TROT GAIT
 venom.walk(TROT)
 ```
-
 ---
 
-## Software Installation
+## Software-Installation
 
 - Requires Python 3.4+ installed on RaspberryPi (or Similar Development Board).
 
-## Hardware Stack
+## Hardware-Stack
 
 -  [Jetson Nano](https://www.nvidia.com/en-in/autonomous-machines/embedded-systems/jetson-nano/) (RasberryPi will work as well)
 -  Servo Motors: [ 12 Dynamixel AX-12A](https://www.trossenrobotics.com/dynamixel-ax-12-robot-actuator.aspx) or better / any Normal PWM Servo Motor (Torque > 20kgcm )
@@ -86,28 +76,6 @@ $ python3 -m pip install numpy adafruit_servokit busio sympy
 ```
 
 
-## Contributing
-
-> To get started...
-
-### Step 1
-
-- **Option 1**
-    - 🍴 Fork this repo!
-
-- **Option 2**
-    - 👯 Clone this repo to your local machine using `https://github.com/chinmaynehate/Venom.git`
-
-### Step 2
-
-- **HACK AWAY!** 🔨🔨🔨
-
-### Step 3
-
-- 🔃 Create a new pull request using <a href="https://github.com/chinmaynehate/Venom.git" target="_blank">`https://github.com/chinmaynehate/Venom.git`</a>.
-
----
-
 ## Team
 
 | <a href="http://fvcproductions.com" target="_blank">**Chinmay Nehate**</a> | <a href="http://fvcproductions.com" target="_blank">**Suyash More**</a> | <a href="http://fvcproductions.com" target="_blank">**Shashank Deshmukh**</a> |
@@ -121,7 +89,7 @@ $ python3 -m pip install numpy adafruit_servokit busio sympy
 ## FAQ
 
 - **How do I do *specifically* so and so?**
-    - Create an Issue to this repo , we wil add it here
+    - Create an Issue to this repo , we wil respond to the query
 
 ---
 
@@ -129,6 +97,5 @@ $ python3 -m pip install numpy adafruit_servokit busio sympy
 
 ## License
 
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 - **[MIT license](http://opensource.org/licenses/mit-license.php)**
