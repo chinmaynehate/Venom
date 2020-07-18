@@ -26,7 +26,7 @@
 ## Table of Contents (Optional)
 
 - [Installation](#Software-Installation)
-- [Installation](#Hardware-Stack)
+- [Hardware Stack](#Hardware-Stack)
 - [Team](#team)
 - [FAQ](#faq)
 - [License](#license)
