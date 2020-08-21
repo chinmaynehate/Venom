@@ -92,7 +92,7 @@ $ python3 -m pip install numpy adafruit_servokit busio sympy
 ## FAQ
 
 - **How do I do *specifically* so and so?**
-    - Create an Issue to this repo , we wil respond to the query
+    - Create an Issue to this repo , we will respond to the query
 
 ---
 
