@@ -27,7 +27,7 @@
 
 ---
 
-## Table of Contents (Optional)
+## Table of Contents 
 
 - [Installation](#Software-Installation)
 - [Hardware Stack](#Hardware-Stack)
